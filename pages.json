@@ -5,6 +5,9 @@
 			"style": {
 				"navigationBarTitleText": "uni-app"
 			}
+		}, {
+			"path": "pages/list/list",
+			"style": {}
 		}
 	],
 	"globalStyle": {

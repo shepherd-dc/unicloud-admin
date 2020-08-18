@@ -6,8 +6,8 @@ const {
 exports.main = async (event, context) => {
 	let version = getVersion()
 
-	console.log("secret: " + secret);
-	console.log("version: " + version);
+	// console.log("secret: " + secret);
+	// console.log("version: " + version);
 
 	return {
 		secret,

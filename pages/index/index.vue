@@ -14,6 +14,7 @@
 			<button type="primary" @click="get">查询前10条数据</button>
 			<button type="primary" @click="useCommon">使用公用模块</button>
 			<button type="primary" @click="upload">上传文件</button>
+			<button type="primary" @click="router">路由跳转</button>
 		</view>
 	</view>
 </template>
@@ -151,27 +152,16 @@
 							let ext
 							// #ifdef H5
 							ext = res.tempFiles[0].name.split('.').pop()
+							// #endif
+							// #ifndef H5
+							// 字节跳动小程序ios端选择文件会带query
+							ext = res.tempFilePaths[0].split('?')[0].split('.').pop()
+							// #endif
 							const options = {
 								filePath: path,
 								cloudPath: Date.now() + '.' + ext
 							}
 							resolve(options)
-							// #endif
-							// #ifndef H5
-							uni.getImageInfo({
-								src: path,
-								success(info) {
-									const options = {
-										filePath: path,
-										cloudPath: Date.now() + '.' + info.type.toLowerCase()
-									}
-									resolve(options)
-								},
-								fail(err) {
-									reject(new Error(err.errMsg || '未能获取图片类型'))
-								}
-							})
-							// #endif
 						},
 						fail: () => {
 							reject(new Error('Fail_Cancel'))
@@ -203,6 +193,11 @@
 							showCancel: false
 						})
 					}
+				})
+			},
+			router () {
+				this.$Router.push({
+					name: 'list'
 				})
 			}
 		}
