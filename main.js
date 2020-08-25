@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
+import $uniCloud from './utils/request'
 
 import { RouterMount } from 'uni-simple-router'
 import ViewUI from 'view-design'
@@ -11,6 +12,7 @@ import config from './config'
 
 Vue.config.productionTip = false
 Vue.prototype.$config = config
+Vue.prototype.$uniCloud = $uniCloud
 
 ViewUI.Message.config({
 	top: 50,

@@ -5,7 +5,14 @@
 {
 	"unicloud-test": {},
 	"uni-id-users": {
-		"data": [],
+		"data": [{
+			"username": "admin",
+			"password": "317a81614b65fc31573c947874961fa4111f5e00",
+			"token": [],
+			"avatar": "https://img.cdn.aliyun.dcloud.net.cn/uni-app/uniCloud/unicloudlogo.png",
+			"roles_id": "5ec1f715f8eeb6004dc291f6",
+			"status": 0
+		}],
 		"index": [{
 			"IndexName": "username",
 			"MgoKeySchema": {
@@ -69,6 +76,17 @@
 				}],
 				"MgoIsUnique": false
 			}
+		}]
+	},
+	"uni-roles": {
+		"data": [{
+			"_id": "5ec1f715f8eeb6004dc291f6",
+			"name": "超级权限",
+			"node": [
+				"user",
+				"roles"
+			],
+			"status": 1
 		}]
 	},
 	"uni-verify": {

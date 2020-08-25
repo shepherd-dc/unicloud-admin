@@ -1,7 +1,7 @@
 /**
  * 表单核验
  */
-export const validateUse = (rule, value, callback) => {
+export const validateUser = (rule, value, callback) => {
 	if (!value) {
 		callback(new Error('请输入账号'));
 	} else {
@@ -35,21 +35,19 @@ export const validateEmail = (rule, value, callback) => {
  * 正则表达式
  */
 export default function checker(type, value) {
+	let pattern
 	switch (type) {
 		// 用户名
 		case 'username':
-			var pattern = /^[-_a-zA-Z0-9]{5,16}$/;
+			pattern = /^[-_a-zA-Z0-9]{5,16}$/;
 			return pattern.test(value);
-			break;
 			// 密码
 		case 'password':
-			var pattern = /(?=.*[A-Za-z])[A-Za-z\d$@!%*#?&]{6,16}$/;
+			pattern = /(?=.*[A-Za-z])[A-Za-z\d$@!%*#?&]{6,16}$/;
 			return pattern.test(value);
-			break;
 			// 邮箱
 		case 'email':
-			var pattern = /^[a-zA-Z0-9]{1,10}@[a-zA-Z0-9]{1,5}\.[a-zA-Z0-9]{1,5}$/;
+			pattern = /^[a-zA-Z0-9]{1,10}@[a-zA-Z0-9]{1,5}\.[a-zA-Z0-9]{1,5}$/;
 			return pattern.test(value);
-			break;
 	}
 }

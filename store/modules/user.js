@@ -54,20 +54,22 @@ export default {
 		}) {
 			return new Promise(async (resolve, reject) => {
 				try {
-					var res = await login({
+					const res = await login({
 						username,
 						password
 					})
-					commit('setUid', res.uid)
-					commit('setToken', res.token)
-					await dispatch('getUserInfo')
-					Notice.success({
-						title: '登录成功'
-					});
-					router.replace({
-						name: 'index'
-					});
-					return resolve(true)
+					if (res.code === 0) {
+						commit('setUid', res.uid)
+						commit('setToken', res.token)
+						await dispatch('getUserInfo')
+						Notice.success({
+							title: '登录成功'
+						});
+						router.replace({
+							name: 'index'
+						});
+						resolve()
+					}
 				} catch (error) {
 					reject(error)
 				}

@@ -1,25 +1,26 @@
-import request from '@/utils/request'
+import { uniID, callApi } from '@/utils/request'
 
 // 登录
-export const login = (data) => {
-	return request({
+export const login = async (params) => {
+	// return await uniID('login', params)
+	return callApi({
 		url: 'login/index',
+		data: params
+	})
+}
+
+// 获取用户信息
+export const getAdminUserInfo = (data) => {
+	return callApi({
+		url: 'user/userInfo',
 		data
 	})
 }
 
 // 退出登录
 export const logout = (data) => {
-	return request({
+	return callApi({
 		url: 'login/logout',
-		data
-	})
-}
-
-// 获取用户信息
-export const getAdminUserInfo = (data) => {
-	return request({
-		url: 'user/userInfo',
 		data
 	})
 }
