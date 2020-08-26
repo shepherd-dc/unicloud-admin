@@ -1,5 +1,6 @@
-import request from '@/utils/request'
-var url = 'roles'
+import { callApi as request } from '@/utils/request'
+const url = 'roles'
+
 export const getRolesList = (data) => {
 	return request({
 		url,

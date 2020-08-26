@@ -224,12 +224,13 @@ export default {
 				if (valid) {
 					if (this.department.name != '超级权限') {
 						this.modal_loading = true;
+						const department = Object.assign({}, this.department)
 						try {
-							this.department.status = this.department.status ? 0 : 1;
+							department.status = department.status ? 0 : 1;
 							if (this.method == 'add') {
-								await addRoles(this.department);
+								await addRoles(department);
 							} else if (this.method == 'edit') {
-								await editRoles(this.department);
+								await editRoles(department);
 							}
 							this.$Message.success({
 								background: true,

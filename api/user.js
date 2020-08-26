@@ -1,5 +1,5 @@
-import request from '@/utils/request'
-var url = 'user/index'
+import { callApi as request } from '@/utils/request'
+const url = 'user/index'
 
 // 获取用户列表
 export const getAdminUserList = (data) => {

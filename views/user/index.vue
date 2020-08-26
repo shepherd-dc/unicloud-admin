@@ -68,6 +68,7 @@
 import { getAdminUserList, deleteAdminUser, batchdelete, getAdminUser, addAdminUser, editAdminUser } from '@/api/user';
 import { getRolesList } from '@/api/roles';
 import { validateUse, validatePass } from '@/utils/checker';
+// import { cloneDeep } from 'lodash'
 export default {
 	data() {
 		const validatePassCheck = (rule, value, callback) => {
@@ -264,16 +265,18 @@ export default {
 		confirm(formName) {
 			this.$refs[formName].validate(async valid => {
 				if (valid) {
-					console.log(this.adminuser)
-					if (this.adminuser._id != "5f06d4b604c20400012c32f4") {
+					// console.log(this.adminuser)
+					if (this.adminuser._id != '5f45d5fe8752410001896b90') {
 						this.modal_loading = true;
+						// const adminuser = cloneDeep(this.adminuser)
+						const adminuser = Object.assign({}, this.adminuser)
 						try {
-							this.adminuser.status = this.adminuser.status ? 0 : 1;
-							delete this.adminuser.passwdCheck;
+							adminuser.status = adminuser.status ? 0 : 1;
+							delete adminuser.passwdCheck;
 							if (this.method == 'add') {
-								await addAdminUser(this.adminuser);
+								await addAdminUser(adminuser);
 							} else if (this.method == 'edit') {
-								await editAdminUser(this.adminuser);
+								await editAdminUser(adminuser);
 							}
 							this.$Message.success({
 								background: true,
