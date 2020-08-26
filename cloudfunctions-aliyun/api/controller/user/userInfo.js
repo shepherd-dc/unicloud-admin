@@ -3,14 +3,14 @@ const db = uniCloud.database();
 
 module.exports = {
 	main: async (event) => {
-		let {
+		const {
 			data,
 			token,
 			method
 		} = event;
-		var collection = db.collection('uni-id-users')
-		var payload = await uniID.checkToken(token)
-		var res = (await collection.aggregate()
+		const collection = db.collection('uni-id-users')
+		const payload = await uniID.checkToken(token)
+		const res = await collection.aggregate()
 			// 关联权限表
 			.lookup({
 				from: 'uni-roles',
@@ -18,20 +18,23 @@ module.exports = {
 				foreignField: '_id',
 				as: 'access'
 			})
-			// // 判断权限
-			// .match({
-			// 	_id: payload.uid,
-			// 	status: 0,
-			// 	'access.status': 0
-			// })
+			// 判断权限状态
+			.match({
+				_id: payload.uid,
+				status: 0,
+				'access.status': 0
+			})
+			// 指定排除字段
 			.project({
 				password: 0,
 				roles_id: 0,
 				status: 0,
-				token: 0
+				token: 0,
+				_id: 0
 			})
-			.end()).data[0];
-		if (!res) {
+			.end();
+		const auth = res.data[0];
+		if (!auth) {
 			return {
 				code: 404,
 				msg: '您没有权限访问'

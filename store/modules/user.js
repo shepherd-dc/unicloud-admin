@@ -103,7 +103,9 @@ export default {
 		}) {
 			return new Promise(async (resolve, reject) => {
 				try {
-					var res = await getAdminUserInfo()
+					const result = await getAdminUserInfo()
+					const {data} = result
+					const [res] = data
 					commit('setUserInfo', res)
 					commit('setAccess', res.access[0].node)
 					commit('setHasGetInfo', res ? true : false)
