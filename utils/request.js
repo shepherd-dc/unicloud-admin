@@ -3,6 +3,8 @@ import {
 } from 'view-design';
 import store from '../store';
 import router from '@/router'
+import db from '@/js_sdk/uni-clientDB/index.js'
+const dbCmd = db.command
 
 const $uniCloud = async (name, data) => {
   uni.showLoading()
@@ -35,6 +37,28 @@ export const uniID = async (action, params = {}) => {
     return res.result
   } catch (e) {
     return e
+  } finally {
+    uni.hideLoading()
+  }
+}
+
+export const uniClientDB = async ({command, pagination}) => {
+  uni.showLoading()
+  try {
+    const res = await uniCloud.callFunction({
+      name: 'uni-clientDB', // 云函数名字
+			data: {
+				command,
+				pagination
+			},
+    })
+    return res.result
+  } catch (e) {
+    console.error(e) // eslint-disable-line
+    uni.showModal({
+    	content: e.message || '云函数请求失败',
+    	showCancel: false
+    })
   } finally {
     uni.hideLoading()
   }
@@ -86,3 +110,8 @@ export function callApi(obj) {
 }
 
 export default $uniCloud
+
+export {
+	db,
+	dbCmd
+}
