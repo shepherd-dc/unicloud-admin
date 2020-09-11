@@ -1,34 +1,38 @@
-import {
-	Message
-} from 'view-design';
-import store from '../store';
+import { Message } from 'view-design'
+import store from '../store'
 import router from '@/router'
+
 import db from '@/js_sdk/uni-clientDB/index.js'
 const dbCmd = db.command
 
-const $uniCloud = async (name, data) => {
+const uniClientDB = async ({ name = 'uni-clientDB', command, pagination }) => {
   uni.showLoading()
   try {
-		// const token = uni.getStorageSync('sn-token')
     const res = await uniCloud.callFunction({
-      name, // 云函数名字
-			data
-      // data: Object.assign({}, data, { token }) // 传输数据
+      name,
+			data: {
+				command,
+				pagination
+			},
     })
     return res.result
   } catch (e) {
-    return e
+		console.error(e) // eslint-disable-line
+		Message.error({
+			background: true,
+			content: e.message || '云函数请求失败',
+		})
   } finally {
     uni.hideLoading()
   }
 }
 
-export const uniID = async (action, params = {}) => {
+const uniID = async (action, params = {}) => {
   uni.showLoading()
   try {
 		// const token = uni.getStorageSync('sn-token')
     const res = await uniCloud.callFunction({
-      name: 'user-center', // 云函数名字
+      name: 'user-center',
 			data: {
 				action,
 				params
@@ -36,21 +40,70 @@ export const uniID = async (action, params = {}) => {
     })
     return res.result
   } catch (e) {
-    return e
+    console.error(e) // eslint-disable-line
+    Message.error({
+    	background: true,
+    	content: e.message || '云函数请求失败',
+    })
   } finally {
     uni.hideLoading()
   }
 }
 
-export const uniClientDB = async ({command, pagination}) => {
+const requestAPI = async ({ url, method, data }) => {
   uni.showLoading()
   try {
     const res = await uniCloud.callFunction({
-      name: 'uni-clientDB', // 云函数名字
+      name: 'api',
 			data: {
-				command,
-				pagination
+				url,
+				method,
+				data
 			},
+    })
+    const { result } = res
+    if (result.code === 0) {
+    	if (result.token) {
+    		return result
+    	} else {
+    		return result.data
+    	}
+    } else if (result.code === 403 || result.code === 505) {
+    	store.commit('setUid', '')
+    	store.commit('setToken', '')
+    	store.commit('setHasGetInfo', false)
+    	router.replace({
+    		name: 'login'
+    	});
+    	Message.error({
+    		background: true,
+    		content: result.msg
+    	})
+    } else {
+    	Message.error({
+    		background: true,
+    		content: result.msg
+    	})
+    }
+  } catch (e) {
+    console.error(e) // eslint-disable-line
+		Message.error({
+			background: true,
+			content: e.message || '云函数请求失败',
+		})
+  } finally {
+    uni.hideLoading()
+  }
+}
+
+export default async (name, data) => {
+  uni.showLoading()
+  try {
+		// const token = uni.getStorageSync('sn-token')
+    const res = await uniCloud.callFunction({
+      name, // 云函数名字
+			// data: Object.assign({}, data, { token }) // 传输数据
+			data
     })
     return res.result
   } catch (e) {
@@ -64,54 +117,10 @@ export const uniClientDB = async ({command, pagination}) => {
   }
 }
 
-export function callApi(obj) {
-	return new Promise((resolve, reject) => {
-		uniCloud.callFunction({
-			name: 'api',
-			data: {
-				url: obj.url,
-				method: obj.method,
-				data: obj.data
-			},
-			success(res) {
-				var data = res.result
-				if (data.code === 0) {
-					if (data.token) {
-						resolve(data)
-					} else {
-						resolve(data.data)
-					}
-				} else if (data.code === 1302) {
-					store.dispatch('handleLogOut')
-				} else if (data.code === 505) {
-					store.commit('setUid', '')
-					store.commit('setToken', '')
-					store.commit('setHasGetInfo', '')
-					router.replace({
-						name: 'login'
-					});
-					Message.error({
-						background: true,
-						content: data.msg
-					})
-				} else {
-					Message.error({
-						background: true,
-						content: data.msg
-					})
-					reject()
-				}
-			},
-			fail(error) {
-				reject(Message.error('服务器异常'))
-			}
-		})
-	})
-}
-
-export default $uniCloud
-
 export {
+	requestAPI,
+	uniID,
+	uniClientDB,
 	db,
 	dbCmd
 }

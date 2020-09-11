@@ -1,4 +1,4 @@
-import { callApi as request } from '@/utils/request'
+import { requestAPI as request } from '@/utils/request'
 const url = 'roles'
 
 export const getRolesList = (data) => {

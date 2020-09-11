@@ -7,7 +7,7 @@ module.exports = {
 			method
 		} = event;
 		try {
-			var res = await uniID.logout(token)
+			const res = await uniID.logout(token)
 			if (res.code === 0) {
 				return res
 			} else {

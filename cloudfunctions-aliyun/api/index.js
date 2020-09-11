@@ -2,23 +2,17 @@
 const path = require('path')
 const resolve = (dir) => path.resolve(__dirname, dir)
 
-const before = require('./utils/before')
+const before = require('./utils/before').main
 
 exports.main = async (event, context) => {
-	let url = event.url;
-	let data = event.data;
-	let token = event.uniIdToken;
-	let method = event.method;
+	const { url, method, data, uniIdToken: token } = event // uniIdToken为uniID自动注入
 	// 守卫拦截
-	let json = await before.main({
-		url,
-		token
-	});
-	if (json.code != 0) {
-		return json;
+	let result = await before({ url, token })
+	if (result.code !== 0) {
+		return result
 	}
 	// 加载业务函数
-	let controller;
+	let controller
 	try {
 		controller = require(resolve(`./controller/${url}`))
 	} catch (err) {
@@ -32,5 +26,5 @@ exports.main = async (event, context) => {
 		data,
 		token,
 		method
-	});
+	})
 }

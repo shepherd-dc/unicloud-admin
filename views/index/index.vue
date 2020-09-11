@@ -2,6 +2,7 @@
 	<div class="page">
 		<Button type="default" @click="query">普通查询</Button>
 		<Button type="default" @click="lodaPage">分页查询</Button>
+		<Button type="default" @click="loginQuery">授权查询</Button>
 	</div>
 </template>
 <script>
@@ -38,6 +39,17 @@ export default {
 			console.log(res);
 			uni.showModal({
 				content: JSON.stringify(res.list),
+				showCancel: false
+			})
+		},
+		async loginQuery() {
+			const res = await uniClientDB({
+				name: 'authorized',
+				command: db.collection('todo').get()
+			})
+			console.log(res);
+			uni.showModal({
+				content: JSON.stringify(res.data),
 				showCancel: false
 			})
 		}
