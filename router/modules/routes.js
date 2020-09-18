@@ -15,7 +15,8 @@ import Layout from '@/layout/index'
  *  beforeCloseName: (-) 设置该字段，则在关闭当前tab页时会去'@/router/before-close.js'里寻找该字段名对应的方法，作为关闭前的钩子函数
  * }
  */
-export default [{
+export default [
+	{
 		path: '/login',
 		component: () => import('@/views/login/login.vue'),
 		name: 'login',
@@ -72,6 +73,44 @@ export default [{
 				icon: 'ios-aperture'
 			},
 			component: () => import('@/views/user/roles')
+		}]
+	},
+	{
+		path: '/menus',
+		component: Layout,
+		name: '/menus/index',
+		redirect: '/index',
+		meta: {
+			title: '栏目管理',
+			icon: 'md-aperture'
+		},
+		children: [{
+			path: 'supmenus',
+			name: 'supmenus',
+			meta: {
+				access: ['roles'],
+				title: '一级栏目管理',
+				icon: 'ios-nuclear'
+			},
+			component: () => import('@/views/menus/supmenus')
+		}, {
+			path: 'index',
+			name: 'menus',
+			meta: {
+				access: ['roles'],
+				title: '二级栏目管理',
+				icon: 'ios-aperture'
+			},
+			component: () => import('@/views/menus/index')
+		}, {
+			path: 'submenus',
+			name: 'submenus',
+			meta: {
+				access: ['roles'],
+				title: '三级栏目管理',
+				icon: 'ios-people'
+			},
+			component: () => import('@/views/menus/submenus')
 		}]
 	},
 	{
