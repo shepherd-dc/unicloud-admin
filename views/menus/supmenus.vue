@@ -136,7 +136,7 @@
 </template>
 
 <script>
-import { getSupmenusList, addSupmenu, getSupmenu, editSupmenu, deleteSupmenu, batchDeleteSupmenu } from '@/api/supmenus'
+import { getMenusList, addMenu, getMenu, editMenu, deleteMenu, batchDeleteMenu } from '@/api/menus'
 export default {
   data () {
     return {
@@ -171,17 +171,17 @@ export default {
                 style: {
                   width: '40px',
                   height: '40px',
-                  overflow: 'hidden'
+                  overflow: 'hidden',
+            			'border-radius': '4px'
                 }
               }, [
                 h('img', {
-								  attrs: {
-								    src: icon
-								  },
-								  style: {
-								    width: '100%',
-                    'border-radius': '4px'
-								  }
+            		  attrs: {
+            		    src: icon
+            		  },
+            		  style: {
+            		    height: '100%',
+            		  }
                 })
               ])
             }
@@ -264,7 +264,7 @@ export default {
         title: '提示信息',
         content: '是否删除?',
         onOk: async () => {
-          await deleteSupmenu(id)
+          await deleteMenu(id)
           this.$Message.success('删除成功')
           this.getList()
         }
@@ -277,7 +277,7 @@ export default {
           title: '提示信息',
           content: '是否删除这些?',
           onOk: async () => {
-            const errs = await batchDeleteSupmenu(this.ids)
+            const errs = await batchDeleteMenu(this.ids)
             if (!errs.length) {
               this.$Message.success('删除成功')
             } else {
@@ -303,14 +303,14 @@ export default {
     // 获取列表
     async getList () {
       this.loading = true
-      const res = await getSupmenusList(this.limit)
+      const res = await getMenusList(this.limit)
       const { list, total } = res
       this.limit.total = total
       this.list = list
       this.loading = false
     },
     // 新增或编辑弹窗
-    addedit (action) {
+    async addedit (action) {
       this.show = true
       if (action === 'add') {
         this.showtitle = '新增栏目'
@@ -318,12 +318,13 @@ export default {
       } else {
         this.showtitle = '编辑栏目'
         this.method = 'edit'
-        this.getSupmenu(action) // action = _id
+        await this.getMenu(action) // action = _id
+    		if (this.supmenu.icon) this.showIcon = true
       }
     },
     // 获取单个数据
-    async getSupmenu (id) {
-      const res = await getSupmenu(id)
+    async getMenu (id) {
+      const res = await getMenu(id)
       const { data } = res
       const [menu] = data
       this.supmenu = menu
@@ -383,12 +384,12 @@ export default {
             supmenu.status = supmenu.status ? 0 : 1
             if (this.method === 'add') {
               console.log(supmenu)
-              await addSupmenu(supmenu)
+              await addMenu(supmenu)
             } else if (this.method === 'edit') {
               const id = supmenu._id
               Reflect.deleteProperty(supmenu, '_id')
               console.log(supmenu)
-              await editSupmenu(id, supmenu)
+              await editMenu(id, supmenu)
             }
             this.$Message.success({
               background: true,
@@ -431,9 +432,9 @@ export default {
 	overflow: hidden;
 	width: 40px;
 	height: 40px;
+	border-radius: 4px;
 	img {
-		width: 100%;
-		border-radius: 4px;
+		height: 100%;
 	}
 }
 
