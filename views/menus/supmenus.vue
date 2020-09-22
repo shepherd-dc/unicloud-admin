@@ -83,19 +83,9 @@
         <FormItem
           prop="icon"
           label="栏目图标">
-          <div class="icon-box">
-            <Button
-              icon="ios-cloud-upload-outline"
-              @click="handleUpload">上传图标</Button>
-            <div
-              v-show="showIcon"
-              class="icon-image">
-              <img :src="supmenu.icon" />
-            </div>
-          </div>
-          <Progress
-            v-show="showProgress"
-            :percent="percent"/>
+					<!-- 自定义上传图片组件 -->
+					<upload-image
+						v-model="supmenu.icon" />
         </FormItem>
         <FormItem
           label="栏目说明">
@@ -137,7 +127,11 @@
 
 <script>
 import { getMenusList, addMenu, getMenu, editMenu, deleteMenu, batchDeleteMenu } from '@/api/menus'
+import uploadImage from '@/components/upload/upload-image'
 export default {
+	components:{
+		uploadImage
+	},
   data () {
     return {
       indeterminate: false,
@@ -180,7 +174,7 @@ export default {
             		    src: icon
             		  },
             		  style: {
-            		    height: '100%',
+            		    height: '100%'
             		  }
                 })
               ])
@@ -242,10 +236,7 @@ export default {
         description: '',
         sort: 0,
         status: true
-      },
-      percent: 0,
-      showProgress: false,
-      showIcon: false
+      }
     }
   },
   mounted () {
@@ -319,7 +310,6 @@ export default {
         this.showtitle = '编辑栏目'
         this.method = 'edit'
         await this.getMenu(action) // action = _id
-    		if (this.supmenu.icon) this.showIcon = true
       }
     },
     // 获取单个数据
@@ -342,37 +332,6 @@ export default {
         status: true
       }
       this.show = false
-    },
-    handleUpload () {
-      uni.chooseImage({
-        count: 1,
-        success: async (res) => {
-          console.log(res)
-          if (res.tempFilePaths.length > 0) {
-            const tempFilePath = res.tempFilePaths[0]
-            const tempFile = res.tempFiles[0].name
-            // 进行上传操作
-            const result = await uniCloud.uploadFile({
-              filePath: tempFilePath,
-              cloudPath: tempFile,
-              onUploadProgress: (progressEvent) => {
-                this.showProgress = true
-                const percentCompleted = Math.round(
-                  (progressEvent.loaded * 100) / progressEvent.total
-                )
-                this.percent = percentCompleted
-              }
-            })
-            this.showProgress = false
-            this.supmenu.icon = result.fileID
-            this.showIcon = true
-            console.log(result)
-          }
-        },
-        fail (err) {
-          console.error(err)
-        }
-      })
     },
     // 提交
     confirm (formName) {
@@ -422,20 +381,6 @@ export default {
 	width: 100%;
 	text-align: center;
 	margin-top: 30px;
-}
-.icon-box {
-	display: flex;
-	align-items: center;
-}
-.icon-image {
-	margin-left: 20px;
-	overflow: hidden;
-	width: 40px;
-	height: 40px;
-	border-radius: 4px;
-	img {
-		height: 100%;
-	}
 }
 
 /deep/ .ivu-input-type-textarea .ivu-input {

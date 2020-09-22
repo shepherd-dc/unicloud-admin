@@ -7,7 +7,29 @@ export function getAll (collection) {
 	})
 }
 
-export function aggregateMenusList (limit, collection) {
+export function aggregateGetAll (collection = 'supmenus') {
+	return uniClientDB({
+		name: 'menus',
+		command: db.collection(collection).aggregate()
+			.lookup({
+				from: 'menus',
+				localField: '_id',
+				foreignField: 'sup_id',
+				as: 'menus'
+			})
+			.project({
+				_id: 1,
+				name: 1,
+				'menus._id': 1,
+				'menus.sup_id': 1,
+				'menus.name': 1,
+			})
+			.sort({'sort': -1})
+			.end()
+	})
+}
+
+export function aggregateMenusList (limit, collection, fromCollection) {
 	const search = {
 		name: limit.search ? new RegExp(limit.search) : dbCmd.exists(true)
 	}
@@ -15,20 +37,20 @@ export function aggregateMenusList (limit, collection) {
 		name: 'menus',
 		command: db.collection(collection).aggregate()
 			.lookup({
-				from: 'supmenus',
+				from: fromCollection,
 				localField: 'sup_id',
 				foreignField: '_id',
-				as: 'supmenus'
+				as: fromCollection
 			})
 			.project({
 				uid: 0,
-				'supmenus._id': 0,
-				'supmenus.uid': 0,
-				'supmenus.icon': 0,
-				'supmenus.status': 0,
-				'supmenus.sort': 0,
-				'supmenus.description': 0,
-				'supmenus.create_time': 0,
+				[fromCollection + '._id']: 0,
+				[fromCollection + '.uid']: 0,
+				[fromCollection + '.icon']: 0,
+				[fromCollection + '.status']: 0,
+				[fromCollection + '.sort']: 0,
+				[fromCollection + '.description']: 0,
+				[fromCollection + '.create_time']: 0,
 			})
 			.match(search)
 			.sort({'sort': -1}),

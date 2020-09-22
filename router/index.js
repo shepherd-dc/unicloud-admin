@@ -35,9 +35,9 @@ router.beforeEach((to, from, next) => {
 	LoadingBar.start()
 	const token = getToken()
 	if (!token && to.name !== LOGIN_PAGE_NAME) {
-		Message.error({
+		Message.warning({
 			background: true,
-			content: '非法入侵'
+			content: '请登录'
 		});
 		// 未登录且要跳转的页面不是登录页
 		next({

@@ -72,19 +72,20 @@
         :model="menu"
         :rules="rules"
         :label-width="80">
-				<FormItem
-				  prop="name"
-				  label="上级栏目">
-					<Select
-						v-model="menu.sup_id"
-						clearable
-						filterable>
-						<Option
-							v-for="item in supmenusList"
-							:value="item._id"
-							:key="item._id">{{ item.name }}</Option>
-				  </Select>
-				</FormItem>
+        <FormItem
+          prop="sup_id"
+          label="上级栏目">
+          <Select
+						ref="resetSelect"
+            v-model="menu.sup_id"
+            clearable
+            filterable>
+            <Option
+              v-for="item in supmenusList"
+              :value="item._id"
+              :key="item._id">{{ item.name }}</Option>
+          </Select>
+        </FormItem>
         <FormItem
           prop="name"
           label="栏目名称">
@@ -96,19 +97,9 @@
         <FormItem
           prop="icon"
           label="栏目图标">
-          <div class="icon-box">
-            <Button
-              icon="ios-cloud-upload-outline"
-              @click="handleUpload">上传图标</Button>
-            <div
-              v-show="showIcon"
-              class="icon-image">
-              <img :src="menu.icon" />
-            </div>
-          </div>
-          <Progress
-            v-show="showProgress"
-            :percent="percent"/>
+        	<!-- 自定义上传图片组件 -->
+        	<upload-image
+        		v-model="menu.icon" />
         </FormItem>
         <FormItem
           label="栏目说明">
@@ -149,8 +140,12 @@
 </template>
 
 <script>
-import { getAll, aggregateMenusList, getMenusList, addMenu, getMenu, editMenu, deleteMenu, batchDeleteMenu } from '@/api/menus'
+import { getAll, aggregateMenusList, addMenu, getMenu, editMenu, deleteMenu, batchDeleteMenu } from '@/api/menus'
+import uploadImage from '@/components/upload/upload-image'
 export default {
+	components:{
+		uploadImage
+	},
   data () {
     return {
       indeterminate: false,
@@ -185,7 +180,7 @@ export default {
                   width: '40px',
                   height: '40px',
                   overflow: 'hidden',
-									'border-radius': '4px'
+                  'border-radius': '4px'
                 }
               }, [
                 h('img', {
@@ -193,7 +188,7 @@ export default {
 								    src: icon
 								  },
 								  style: {
-								    height: '100%',
+								    height: '100%'
 								  }
                 })
               ])
@@ -205,11 +200,11 @@ export default {
           key: 'name',
           align: 'center'
         },
-				{
+        {
 				  title: '上级栏目',
 				  key: 'sup_name',
 				  align: 'center'
-				},
+        },
         {
           title: '文章数',
           key: 'article_count',
@@ -251,26 +246,24 @@ export default {
       list: [],
       rules: {
         name: [{ required: true, message: '请输入栏目名称', trigger: 'blur' }],
+        sup_id: [{ required: true, message: '请选择上级栏目', trigger: 'blur' }],
         icon: [{ required: true, message: '请上传栏目图标' }],
         status: [{ required: true, message: '请选择状态' }]
       },
       menu: {
-				sup_id: '',
+        sup_id: '',
         name: '',
         icon: '',
         description: '',
         sort: 0,
         status: true
       },
-			supmenusList: [],
-      percent: 0,
-      showProgress: false,
-      showIcon: false
-    }
+      supmenusList: [],
+		}
   },
   mounted () {
     this.getList()
-		this.getSupmenusList()
+    this.getSupmenusList()
   },
   methods: {
     // 全选
@@ -292,24 +285,24 @@ export default {
     // 获取列表
     async getList () {
       this.loading = true
-      const res = await aggregateMenusList(this.limit, 'menus')
+      const res = await aggregateMenusList(this.limit, 'menus', 'supmenus')
       const { list, total } = res
       this.limit.total = total
       this.list = list.map(item => {
-				item.sup_name = item.supmenus[0].name
-				Reflect.deleteProperty(item, 'supmenus')
-				return item
-			})
-			console.log(this.list)
+        item.sup_name = item.supmenus.length ? item.supmenus[0].name : ''
+        Reflect.deleteProperty(item, 'supmenus')
+        return item
+      })
+      console.log(this.list)
       this.loading = false
     },
-		// 获取上级栏目列表
-		async getSupmenusList () {
+    // 获取上级栏目列表
+    async getSupmenusList () {
 		  const res = await getAll('supmenus')
-			console.log('getAll', res)
+      console.log('getAll', res)
 		  const { data } = res
 		  this.supmenusList = data
-		},
+    },
     // 新增或编辑弹窗
     async addedit (action) {
       this.show = true
@@ -320,7 +313,6 @@ export default {
         this.showtitle = '编辑栏目'
         this.method = 'edit'
         await this.getMenu(action) // action = _id
-				if (this.menu.icon) this.showIcon = true
       }
     },
     // 获取单个数据
@@ -336,44 +328,17 @@ export default {
     cancel () {
       this.method = ''
       this.menu = {
+				sup_id: '',
         name: '',
         icon: '',
         description: '',
         sort: 0,
         status: true
       }
+			// 重置Select组件选择状态及搜索条件
+			this.$refs.resetSelect.clearSingleSelect()
+			this.$refs.resetSelect.setQuery('')
       this.show = false
-    },
-    handleUpload () {
-      uni.chooseImage({
-        count: 1,
-        success: async (res) => {
-          console.log(res)
-          if (res.tempFilePaths.length > 0) {
-            const tempFilePath = res.tempFilePaths[0]
-            const tempFile = res.tempFiles[0].name
-            // 进行上传操作
-            const result = await uniCloud.uploadFile({
-              filePath: tempFilePath,
-              cloudPath: tempFile,
-              onUploadProgress: (progressEvent) => {
-                this.showProgress = true
-                const percentCompleted = Math.round(
-                  (progressEvent.loaded * 100) / progressEvent.total
-                )
-                this.percent = percentCompleted
-              }
-            })
-            this.showProgress = false
-            this.menu.icon = result.fileID
-            this.showIcon = true
-            console.log(result)
-          }
-        },
-        fail (err) {
-          console.error(err)
-        }
-      })
     },
     // 提交
     confirm (formName) {
@@ -407,8 +372,8 @@ export default {
         }
       })
     },
-		// 删除
-		async del (id) {
+    // 删除
+    async del (id) {
 		  this.$Modal.confirm({
 		    title: '提示信息',
 		    content: '是否删除?',
@@ -418,9 +383,9 @@ export default {
 		      this.getList()
 		    }
 		  })
-		},
-		// 批量删除
-		async batchDel () {
+    },
+    // 批量删除
+    async batchDel () {
 		  if (this.ids.length > 0) {
 		    this.$Modal.confirm({
 		      title: '提示信息',
@@ -432,13 +397,14 @@ export default {
 		        } else {
 		          this.$Message.error('出错啦')
 		        }
+						this.limit.page = 1
 		        this.getList()
 		      }
 		    })
 		  } else {
 		    this.$Message.error('请选择要删除的数据')
 		  }
-		}
+    }
   }
 }
 </script>
@@ -455,20 +421,6 @@ export default {
 	width: 100%;
 	text-align: center;
 	margin-top: 30px;
-}
-.icon-box {
-	display: flex;
-	align-items: center;
-}
-.icon-image {
-	margin-left: 20px;
-	overflow: hidden;
-	width: 40px;
-	height: 40px;
-	border-radius: 4px;
-	img {
-		height: 100%;
-	}
 }
 
 /deep/ .ivu-input-type-textarea .ivu-input {
