@@ -1,10 +1,17 @@
-const files = require.context('.', false, /\.js$/)
-const modules = []
+// const files = require.context('.', false, /\.js$/)
+// const modules = []
+// files.keys().forEach(key => {
+//   if (key === './index.js') return
+//   const item = files(key).default
+//   modules.push(...item)
+// })
 
-files.keys().forEach(key => {
-  if (key === './index.js') return
-  const item = files(key).default
-  modules.push(...item)
-})
+// export default modules
 
-export default modules
+import defaultRoutes from './routes'
+import menus from './menus'
+
+export default [
+	...menus,
+	...defaultRoutes
+]

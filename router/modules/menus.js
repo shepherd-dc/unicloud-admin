@@ -4,36 +4,36 @@ export default [
 		path: '/menus',
 		component: Layout,
 		name: '/menus/index',
-		redirect: '/index',
+		redirect: '/menus/index',
 		meta: {
 			title: '栏目管理',
-			icon: 'md-nuclear'
+			icon: 'ios-apps'
 		},
 		children: [{
-			path: 'index',
-			name: 'menus',
-			meta: {
-				access: ['roles'],
-				title: '二级栏目管理',
-				icon: 'ios-people'
-			},
-			component: () => import('@/views/menus/index')
-		}, {
 			path: 'supmenus',
 			name: 'supmenus',
 			meta: {
 				access: ['roles'],
 				title: '一级栏目管理',
-				icon: 'ios-people'
+				icon: 'ios-folder'
 			},
 			component: () => import('@/views/menus/supmenus')
+		}, {
+			path: 'index',
+			name: 'menus',
+			meta: {
+				access: ['roles'],
+				title: '二级栏目管理',
+				icon: 'ios-browsers'
+			},
+			component: () => import('@/views/menus/index')
 		}, {
 			path: 'submenus',
 			name: 'submenus',
 			meta: {
 				access: ['roles'],
 				title: '三级栏目管理',
-				icon: 'ios-aperture'
+				icon: 'logo-buffer'
 			},
 			component: () => import('@/views/menus/submenus')
 		}]

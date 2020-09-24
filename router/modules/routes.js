@@ -76,51 +76,13 @@ export default [
 		}]
 	},
 	{
-		path: '/menus',
-		component: Layout,
-		name: '/menus/index',
-		redirect: '/index',
-		meta: {
-			title: '栏目管理',
-			icon: 'md-aperture'
-		},
-		children: [{
-			path: 'supmenus',
-			name: 'supmenus',
-			meta: {
-				access: ['roles'],
-				title: '一级栏目管理',
-				icon: 'ios-nuclear'
-			},
-			component: () => import('@/views/menus/supmenus')
-		}, {
-			path: 'index',
-			name: 'menus',
-			meta: {
-				access: ['roles'],
-				title: '二级栏目管理',
-				icon: 'ios-aperture'
-			},
-			component: () => import('@/views/menus/index')
-		}, {
-			path: 'submenus',
-			name: 'submenus',
-			meta: {
-				access: ['roles'],
-				title: '三级栏目管理',
-				icon: 'ios-people'
-			},
-			component: () => import('@/views/menus/submenus')
-		}]
-	},
-	{
 		path: '/components',
 		name: 'components',
 		component: Layout,
 		redirect: '/editor',
 		meta: {
-			title: '富文本编辑器',
-			icon: 'logo-buffer'
+			title: '编辑器组件',
+			icon: 'md-outlet'
 		},
 		children: [{
 			path: 'editor',
