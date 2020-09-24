@@ -1,9 +1,13 @@
 <template>
-  <component :is="iconType" :type="iconName" :color="iconColor" :size="iconSize"/>
+  <component
+    :is="iconType"
+    :type="iconName"
+    :color="iconColor"
+    :size="iconSize"/>
 </template>
 
 <script>
-import Icons from '@/components/icons/icons';
+import Icons from '@/components/icons/icons'
 export default {
   name: 'CommonIcon',
   components: { Icons },

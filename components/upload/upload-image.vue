@@ -1,37 +1,37 @@
 <template>
-	<div class="upload-image">
-		<div class="icon-box">
-			<Button
-				icon="ios-cloud-upload-outline"
-				@click="handleUpload">上传图标</Button>
-			<div
-				v-show="value"
-				class="icon-image">
-				<img :src="value" />
-			</div>
-		</div>
-		<Progress
-			v-show="showProgress"
-			:percent="percent"/>
-	</div>
+  <div class="upload-image">
+    <div class="icon-box">
+      <Button
+        icon="ios-cloud-upload-outline"
+        @click="handleUpload">上传图标</Button>
+      <div
+        v-show="value"
+        class="icon-image">
+        <img :src="value" />
+      </div>
+    </div>
+    <Progress
+      v-show="showProgress"
+      :percent="percent"/>
+  </div>
 </template>
 
 <script>
 import uploadImage from '@/mixins/upload'
 export default {
-	mixins: [uploadImage],
-	props: {
-		value: {
-			type: String,
-			default: ''
-		}
-	},
-	methods: {
-		async handleUpload () {
-			const result = await this.uploadImage()
-			this.$emit('input', result.fileID)
-		}
-	}
+  mixins: [uploadImage],
+  props: {
+    value: {
+      type: String,
+      default: ''
+    }
+  },
+  methods: {
+    async handleUpload () {
+      const result = await this.uploadImage()
+      this.$emit('input', result.fileID)
+    }
+  }
 }
 </script>
 

@@ -119,17 +119,25 @@ export default [
 		component: Layout,
 		redirect: '/editor',
 		meta: {
-			title: '组件',
+			title: '富文本编辑器',
 			icon: 'logo-buffer'
 		},
 		children: [{
 			path: 'editor',
 			name: 'editor',
 			meta: {
-				title: '富文本编辑器',
+				title: 'WangEditor',
 				icon: 'ios-create'
 			},
 			component: () => import('@/components/editor/editor')
+		}, {
+			path: 'editor-nex',
+			name: 'editorNex',
+			meta: {
+				title: 'QuillEditor',
+				icon: 'ios-create'
+			},
+			component: () => import('@/components/editor/editor-nex')
 		}]
 	},
 	{
