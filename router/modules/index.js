@@ -10,8 +10,10 @@
 
 import defaultRoutes from './routes'
 import menus from './menus'
+import articles from './articles'
 
 export default [
 	...menus,
+	...articles,
 	...defaultRoutes
 ]

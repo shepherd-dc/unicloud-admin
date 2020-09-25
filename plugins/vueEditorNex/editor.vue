@@ -218,9 +218,9 @@ export default {
         }
 
         // Upload image
-        this.editorNex.on('image-upload', (files, range, source) => {
+        this.editorNex.on('image-upload', (range, source) => {
           const editorNex = this.editorNex
-          this.$emit('image-upload', { files, range, editorNex })
+          this.$emit('image-upload', { range, editorNex })
         })
 
         // Mso image alert

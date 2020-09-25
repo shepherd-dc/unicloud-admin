@@ -10,7 +10,8 @@
       @click="batchDel">批量删除</Button>
     <Tooltip
       content="刷新"
-      placement="right"><Button
+      placement="right">
+      <Button
         class="top"
         type="primary"
         shape="circle"
@@ -76,19 +77,19 @@
           prop="sup_id"
           label="上级栏目">
           <Select
-						ref="resetSelect"
+            ref="resetSelect"
             v-model="menu.sup_id"
-						filterable
+            filterable
             clearable>
-						<OptionGroup
-							v-for="sup in supmenusList"
-							:key="sup._id"
-							:label="sup.name">
-							<Option
-              v-for="item in sup.menus"
-              :value="item._id"
-              :key="item._id">{{ item.name }}</Option>
-						</OptionGroup>
+            <OptionGroup
+              v-for="sup in supmenusList"
+              :key="sup._id"
+              :label="sup.name">
+              <Option
+                v-for="item in sup.menus"
+                :value="item._id"
+                :key="item._id">{{ item.name }}</Option>
+            </OptionGroup>
           </Select>
         </FormItem>
         <FormItem
@@ -102,9 +103,9 @@
         <FormItem
           prop="icon"
           label="栏目图标">
-        	<!-- 自定义上传图片组件 -->
-        	<upload-image
-        		v-model="menu.icon" />
+          <!-- 自定义上传图片组件 -->
+          <upload-image
+            v-model="menu.icon" />
         </FormItem>
         <FormItem
           label="栏目说明">
@@ -146,11 +147,12 @@
 
 <script>
 import { aggregateGetAll, aggregateMenusList, addMenu, getMenu, editMenu, deleteMenu, batchDeleteMenu } from '@/api/menus'
+import { getAll } from '@/api/articles'
 import uploadImage from '@/components/upload/upload-image'
 export default {
-	components:{
-		uploadImage
-	},
+  components: {
+    uploadImage
+  },
   data () {
     return {
       indeterminate: false,
@@ -251,7 +253,7 @@ export default {
       list: [],
       rules: {
         name: [{ required: true, message: '请输入栏目名称', trigger: 'blur' }],
-				sup_id: [{ required: true, message: '请选择上级栏目', trigger: 'blur' }],
+        sup_id: [{ required: true, message: '请选择上级栏目', trigger: 'blur' }],
         icon: [{ required: true, message: '请上传栏目图标' }],
         status: [{ required: true, message: '请选择状态' }]
       },
@@ -266,9 +268,11 @@ export default {
       supmenusList: []
     }
   },
-  mounted () {
+  async mounted () {
+    const res = await getAll()
+    console.log('getAll', res)
     this.getList()
-		this.getSupmenusList()
+    this.getSupmenusList()
   },
   methods: {
     // 全选
@@ -333,16 +337,16 @@ export default {
     cancel () {
       this.method = ''
       this.menu = {
-				sup_id: '',
+        sup_id: '',
         name: '',
         icon: '',
         description: '',
         sort: 0,
         status: true
       }
-			this.$refs.resetSelect.clearSingleSelect()
-			this.$refs.resetSelect.setQuery('')
-			this.show = false
+      this.$refs.resetSelect.clearSingleSelect()
+      this.$refs.resetSelect.setQuery('')
+      this.show = false
     },
     // 提交
     confirm (formName) {
@@ -401,7 +405,7 @@ export default {
 		        } else {
 		          this.$Message.error('出错啦')
 		        }
-						this.limit.page = 1
+            this.limit.page = 1
 		        this.getList()
 		      }
 		    })
@@ -425,5 +429,16 @@ export default {
 	width: 100%;
 	text-align: center;
 	margin-top: 30px;
+}
+
+/deep/ .ivu-input-type-textarea .ivu-input {
+	resize: none;
+	font-family: 'MicroSoft YaHei';
+}
+/deep/ .ivu-input-type-textarea .ivu-input-word-count {
+	bottom: 6px;
+}
+/deep/ .ivu-upload .ivu-upload-input {
+  display: none;
 }
 </style>

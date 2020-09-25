@@ -14,4 +14,14 @@
 
 <style>
 	/*每个页面公共css */
+	.ivu-input-type-textarea .ivu-input {
+		resize: none;
+		font-family: 'MicroSoft YaHei';
+	}
+	.ivu-input-type-textarea .ivu-input-word-count {
+		bottom: 6px;
+	}
+	.ivu-upload .ivu-upload-input {
+	  display: none;
+	}
 </style>

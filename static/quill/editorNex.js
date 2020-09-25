@@ -1,5 +1,6 @@
 /*!
  * EditorNex v1.4.0
+ * Copyright (c), sinitek.com
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -1521,7 +1522,7 @@ EditorNex.DEFAULTS = {
 EditorNex.events = _emitter4.default.events;
 EditorNex.sources = _emitter4.default.sources;
 // eslint-disable-next-line no-undef
-EditorNex.version = false ? 'dev' : "1.4.0";
+EditorNex.version =  false ? 'dev' : "1.4.0";
 
 EditorNex.imports = {
   'delta': _quillDelta2.default,
@@ -1692,7 +1693,7 @@ var extend = __webpack_require__(2);
 var op = __webpack_require__(21);
 
 
-var NULL_CHARACTER = String.fromCharCode(0); // Placeholder char for embed in diff()
+var NULL_CHARACTER = String.fromCharCode(0);  // Placeholder char for embed in diff()
 
 
 var Delta = function (ops) {
@@ -3238,9 +3239,9 @@ var lib = {
     transform: function (a, b, priority) {
       if (typeof a !== 'object') return b;
       if (typeof b !== 'object') return undefined;
-      if (!priority) return b; // b simply overwrites us without priority
+      if (!priority) return b;  // b simply overwrites us without priority
       var attributes = Object.keys(b).reduce(function (attributes, key) {
-        if (a[key] === undefined) attributes[key] = b[key]; // null is a valid value
+        if (a[key] === undefined) attributes[key] = b[key];  // null is a valid value
         return attributes;
       }, {});
       return Object.keys(attributes).length > 0 ? attributes : undefined;
@@ -3267,7 +3268,7 @@ function Iterator(ops) {
   this.ops = ops;
   this.index = 0;
   this.offset = 0;
-}
+};
 
 Iterator.prototype.hasNext = function () {
   return this.peekLength() < Infinity;
@@ -6783,40 +6784,45 @@ BaseTheme.DEFAULTS = (0, _extend2.default)(true, {}, _theme2.default.DEFAULTS, {
           this.quill.theme.tooltip.edit('formula');
         },
         image: function image() {
-          var _this3 = this;
-
-          var fileInput = this.container.querySelector('input.ql-image[type=file]');
-          if (fileInput == null) {
-            fileInput = document.createElement('input');
-            fileInput.setAttribute('type', 'file');
-            fileInput.setAttribute('accept', 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon');
-            fileInput.classList.add('ql-image');
-            // fileInput.addEventListener('change', () => {
-            //   if (fileInput.files != null && fileInput.files[0] != null) {
-            //     let reader = new FileReader();
-            //     reader.onload = (e) => {
-            //       let range = this.quill.getSelection(true);
-            //       this.quill.updateContents(new Delta()
-            //         .retain(range.index)
-            //         .delete(range.length)
-            //         .insert({ image: e.target.result })
-            //       , Emitter.sources.USER);
-            //       this.quill.setSelection(range.index + 1, Emitter.sources.SILENT);
-            //       fileInput.value = "";
-            //     }
-            //     reader.readAsDataURL(fileInput.files[0]);
-            //   }
-            // });
-            fileInput.addEventListener('change', function () {
-              var range = _this3.quill.getSelection(true);
-              // 触发一个自定义事件传递所需的参数，剩下的逻辑交由前端自行按需处理
-              _this3.quill.emitter.emit(_emitter2.default.events.IMAGE_UPLOAD, fileInput.files, range, _emitter2.default.sources.USER);
-              // this.quill.uploader.upload(range, fileInput.files);
-              fileInput.value = '';
-            });
-            this.container.appendChild(fileInput);
-          }
-          fileInput.click();
+          // 触发一个自定义事件传递所需的参数，剩下的逻辑交由前端自行按需处理
+          var range = this.quill.getSelection(true);
+          this.quill.emitter.emit(_emitter2.default.events.IMAGE_UPLOAD, range, _emitter2.default.sources.USER);
+          // let fileInput = this.container.querySelector('input.ql-image[type=file]');
+          // if (fileInput == null) {
+          //   fileInput = document.createElement('input');
+          //   fileInput.setAttribute('type', 'file');
+          //   fileInput.setAttribute('accept', 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon');
+          //   fileInput.classList.add('ql-image');
+          //   // fileInput.addEventListener('change', () => {
+          //   //   if (fileInput.files != null && fileInput.files[0] != null) {
+          //   //     let reader = new FileReader();
+          //   //     reader.onload = (e) => {
+          //   //       let range = this.quill.getSelection(true);
+          //   //       this.quill.updateContents(new Delta()
+          //   //         .retain(range.index)
+          //   //         .delete(range.length)
+          //   //         .insert({ image: e.target.result })
+          //   //       , Emitter.sources.USER);
+          //   //       this.quill.setSelection(range.index + 1, Emitter.sources.SILENT);
+          //   //       fileInput.value = "";
+          //   //     }
+          //   //     reader.readAsDataURL(fileInput.files[0]);
+          //   //   }
+          //   // });
+          //   fileInput.addEventListener('change', () => {
+          //     const range = this.quill.getSelection(true);
+          //     // 触发一个自定义事件传递所需的参数，剩下的逻辑交由前端自行按需处理
+          //     this.quill.emitter.emit(
+          //       Emitter.events.IMAGE_UPLOAD,
+          //       fileInput.files,
+          //       range,
+          //       Emitter.sources.USER);
+          //     // this.quill.uploader.upload(range, fileInput.files);
+          //     fileInput.value = '';
+          //   });
+          //   this.container.appendChild(fileInput);
+          // }
+          // fileInput.click();
         },
         video: function video() {
           this.quill.theme.tooltip.edit('video');
@@ -6832,24 +6838,24 @@ var BaseTooltip = function (_Tooltip) {
   function BaseTooltip(quill, boundsContainer) {
     _classCallCheck(this, BaseTooltip);
 
-    var _this4 = _possibleConstructorReturn(this, (BaseTooltip.__proto__ || Object.getPrototypeOf(BaseTooltip)).call(this, quill, boundsContainer));
+    var _this3 = _possibleConstructorReturn(this, (BaseTooltip.__proto__ || Object.getPrototypeOf(BaseTooltip)).call(this, quill, boundsContainer));
 
-    _this4.textbox = _this4.root.querySelector('input[type="text"]');
-    _this4.listen();
-    return _this4;
+    _this3.textbox = _this3.root.querySelector('input[type="text"]');
+    _this3.listen();
+    return _this3;
   }
 
   _createClass(BaseTooltip, [{
     key: 'listen',
     value: function listen() {
-      var _this5 = this;
+      var _this4 = this;
 
       this.textbox.addEventListener('keydown', function (event) {
         if (_keyboard2.default.match(event, 'enter')) {
-          _this5.save();
+          _this4.save();
           event.preventDefault();
         } else if (_keyboard2.default.match(event, 'escape')) {
-          _this5.cancel();
+          _this4.cancel();
           event.preventDefault();
         }
       });
@@ -8085,7 +8091,7 @@ function diff_main(text1, text2, cursor_pos) {
   }
   diffs = fix_emoji(diffs);
   return diffs;
-}
+};
 
 
 /**
@@ -8146,7 +8152,7 @@ function diff_compute_(text1, text2) {
   }
 
   return diff_bisect_(text1, text2);
-}
+};
 
 
 /**
@@ -8262,7 +8268,7 @@ function diff_bisect_(text1, text2) {
   // Diff took too long and hit the deadline or
   // number of diffs equals number of characters, no commonality at all.
   return [[DIFF_DELETE, text1], [DIFF_INSERT, text2]];
-}
+};
 
 
 /**
@@ -8285,7 +8291,7 @@ function diff_bisectSplit_(text1, text2, x, y) {
   var diffsb = diff_main(text1b, text2b);
 
   return diffs.concat(diffsb);
-}
+};
 
 
 /**
@@ -8317,7 +8323,7 @@ function diff_commonPrefix(text1, text2) {
     pointermid = Math.floor((pointermax - pointermin) / 2 + pointermin);
   }
   return pointermid;
-}
+};
 
 
 /**
@@ -8349,7 +8355,7 @@ function diff_commonSuffix(text1, text2) {
     pointermid = Math.floor((pointermax - pointermin) / 2 + pointermin);
   }
   return pointermid;
-}
+};
 
 
 /**
@@ -8366,7 +8372,7 @@ function diff_halfMatch_(text1, text2) {
   var longtext = text1.length > text2.length ? text1 : text2;
   var shorttext = text1.length > text2.length ? text2 : text1;
   if (longtext.length < 4 || shorttext.length * 2 < longtext.length) {
-    return null; // Pointless.
+    return null;  // Pointless.
   }
 
   /**
@@ -8442,7 +8448,7 @@ function diff_halfMatch_(text1, text2) {
   }
   var mid_common = hm[4];
   return [text1_a, text1_b, text2_a, text2_b, mid_common];
-}
+};
 
 
 /**
@@ -8451,7 +8457,7 @@ function diff_halfMatch_(text1, text2) {
  * @param {Array} diffs Array of diff tuples.
  */
 function diff_cleanupMerge(diffs) {
-  diffs.push([DIFF_EQUAL, '']); // Add a dummy entry at the end.
+  diffs.push([DIFF_EQUAL, '']);  // Add a dummy entry at the end.
   var pointer = 0;
   var count_delete = 0;
   var count_insert = 0;
@@ -8530,7 +8536,7 @@ function diff_cleanupMerge(diffs) {
     }
   }
   if (diffs[diffs.length - 1][1] === '') {
-    diffs.pop(); // Remove the dummy entry at the end.
+    diffs.pop();  // Remove the dummy entry at the end.
   }
 
   // Second pass: look for single edits surrounded on both sides by equalities
@@ -8569,7 +8575,7 @@ function diff_cleanupMerge(diffs) {
   if (changes) {
     diff_cleanupMerge(diffs);
   }
-}
+};
 
 
 var diff = diff_main;
@@ -10496,7 +10502,7 @@ function bidirectionalIndexOf (buffer, val, byteOffset, encoding, dir) {
   } else if (byteOffset < -0x80000000) {
     byteOffset = -0x80000000
   }
-  byteOffset = +byteOffset // Coerce to Number.
+  byteOffset = +byteOffset  // Coerce to Number.
   if (isNaN(byteOffset)) {
     // byteOffset: it it's undefined, null, NaN, "foo", etc, search whole buffer
     byteOffset = dir ? 0 : (buffer.length - 1)
@@ -11904,7 +11910,7 @@ exports = module.exports = supportsArgumentsClass ? supported : unsupported;
 exports.supported = supported;
 function supported(object) {
   return Object.prototype.toString.call(object) == '[object Arguments]';
-}
+};
 
 exports.unsupported = unsupported;
 function unsupported(object){
@@ -11914,7 +11920,7 @@ function unsupported(object){
     Object.prototype.hasOwnProperty.call(object, 'callee') &&
     !Object.prototype.propertyIsEnumerable.call(object, 'callee') ||
     false;
-}
+};
 
 
 /***/ }),

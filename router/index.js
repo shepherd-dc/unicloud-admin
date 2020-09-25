@@ -11,7 +11,7 @@ import {
 } from '@/utils'
 
 Vue.use(Router)
-console.log('routes', routes)
+// console.log('routes', routes)
 
 // 初始化
 const router = new Router({

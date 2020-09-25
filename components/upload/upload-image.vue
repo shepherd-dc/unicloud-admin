@@ -3,7 +3,7 @@
     <div class="icon-box">
       <Button
         icon="ios-cloud-upload-outline"
-        @click="handleUpload">上传图标</Button>
+        @click="handleUpload">{{ text }}</Button>
       <div
         v-show="value"
         class="icon-image">
@@ -24,7 +24,11 @@ export default {
     value: {
       type: String,
       default: ''
-    }
+    },
+		text: {
+			type: String,
+			default: '上传图标'
+		}
   },
   methods: {
     async handleUpload () {

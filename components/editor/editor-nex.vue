@@ -1,21 +1,13 @@
 <template>
   <div class="vue-editor-nex">
     <vue-editor-nex
-      v-model="docData.html"
-      :title="docData.title || ''"
-      :subtitle="docData.subtitle || ''"
-      :introduction="docData.writetip || ''"
+      v-model="content"
       :options="options"
-      @ready="onEditorReady($event)"
-      @blur="onEditorBlur($event)"
-      @focus="onEditorFocus($event)"
-      @change="onEditorChange($event)"
-      @title-change="onTitleChange($event)"
-      @image-upload="onImageUpload($event)"
-      @mso-image="onMsoImage($event)"
-      @history-list="onHistoryList($event)"
-      @extension-input-change="onExtensionInputChange($event)"
-      @extension-textarea-change="onExtensionTextareaChange($event)"
+      @ready="onEditorReady"
+      @blur="onEditorBlur"
+      @focus="onEditorFocus"
+      @change="onEditorChange"
+      @image-upload="onImageUpload"
     />
   </div>
 </template>
@@ -24,7 +16,7 @@
 import { vueEditorNex } from '@/plugins/vueEditorNex'
 
 export default {
-  name: 'editor-nex',
+  name: 'EditorNex',
   components: {
     vueEditorNex
   },
@@ -37,9 +29,19 @@ export default {
       type: Boolean,
       default: false
     },
-    docData: {
-      type: Object,
-      default: () => ({})
+    value: {
+      type: String,
+      default: ''
+    }
+  },
+  data () {
+    return {
+      content: ''
+    }
+  },
+  watch: {
+    value (v) {
+      if (v) this.content = v
     }
   },
   methods: {
@@ -54,28 +56,11 @@ export default {
     },
     onEditorChange ({ editorNex, html, text, delta }) {
       // console.log('editor change!', editorNex, html, text)
-      const data = { html, delta: editorNex.editor.delta, height: this.$el.offsetHeight }
-      this.$emit('deliverContent', data)
+      // const data = { html, delta: editorNex.editor.delta }
+      this.$emit('input', html)
     },
-    onTitleChange ({ value, event, source }) {
-      // console.log('title change!', value, event, source)
-      this.$emit('deliverTitle', value)
-    },
-    onImageUpload ({ files, range, editorNex }) {
-      this.$emit('uploadImage', { files, range, editorNex })
-    },
-    onMsoImage ({ msg, node, source }) {
-      alert(msg)
-      console.log(node)
-    },
-    onHistoryList ({ dom, stack, source }) {
-      this.$emit('historyList', { dom, stack, source })
-    },
-    onExtensionInputChange ({ value, event, source }) {
-      this.$emit('deliverSubtitle', { value, event })
-    },
-    onExtensionTextareaChange ({ value, event, source }) {
-      this.$emit('deliverIntroduction', { value, event })
+    onImageUpload ({ range, editorNex }) {
+      this.$emit('uploadImage', { range, editorNex })
     }
   }
 }
@@ -84,5 +69,12 @@ export default {
 <style lang="less" scoped>
 	/deep/.ql-editor {
 		padding: 20px;
+	}
+	/deep/.ql-toolbar {
+		border-radius: 4px 4px 0 0;
+	}
+	/deep/.ql-container {
+		border-radius: 0 0 4px 4px;
+		height: 100%;
 	}
 </style>

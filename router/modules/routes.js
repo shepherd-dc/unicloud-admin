@@ -82,7 +82,7 @@ export default [
 		redirect: '/editor',
 		meta: {
 			title: '编辑器组件',
-			icon: 'md-outlet'
+			icon: 'ios-color-palette'
 		},
 		children: [{
 			path: 'editor',
