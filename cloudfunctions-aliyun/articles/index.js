@@ -4,6 +4,8 @@ const uniID = require('uni-id')
 const db = uniCloud.database()
 const dbCmd = db.command
 
+const getMenusRules = require('./menus.js')
+
 exports.main = async (event, context) => {
 	if (!event.uniIdToken) {
 		return {
@@ -15,6 +17,8 @@ exports.main = async (event, context) => {
 	if (payload && payload.code > 0) {
 		return payload
 	}
+	
+	const menus = getMenusRules(payload, dbCmd)
 	try {
 		const result = await uniCurd({
 			command: event.command,
@@ -52,23 +56,19 @@ exports.main = async (event, context) => {
 									if (!args[0] || !args[0].title) {
 										throw new Error('文章标题不能为空')
 									}
-									args[0].status = 0
 									args[0].create_time = Date.now()
 									args[0].uid = payload.uid
 									break;
 								case 'update':
-									if (args[0].done) {
-										args[0].done_time = Date.now()
-									} else if(args[0].done === false) {
-										args[0].done_time = dbCmd.remove()
-									}
+									args[0].update_time = Date.now()
 									break;
 								default:
 									break;
 							}
 						}
 					}
-				}
+				},
+				...menus
 			}
 		})
 		return {

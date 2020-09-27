@@ -11,7 +11,7 @@ export default [
 		},
 		children: [{
 			path: 'index',
-			name: '/articles/index',
+			name: 'articles/index',
 			meta: {
 				access: ['roles'],
 				title: '文章列表',
@@ -20,7 +20,7 @@ export default [
 			component: () => import('@/views/articles/index')
 		}, {
 			path: 'edit',
-			name: '/articles/edit',
+			name: 'articles/edit',
 			meta: {
 				access: ['roles'],
 				title: '发布文章',
@@ -29,10 +29,11 @@ export default [
 			component: () => import('@/views/articles/edit')
 		}, {
 			path: 'detail',
-			name: '/articles/detail',
+			name: 'articles/detail',
 			meta: {
 				access: ['roles'],
 				title: '文章详情',
+				hideInMenu: true,
 				icon: 'ios-book'
 			},
 			component: () => import('@/views/articles/detail')

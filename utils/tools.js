@@ -100,6 +100,10 @@ const getDate = (timeStamp, startType) => {
 	return resStr
 }
 
+export function formatDate (timeStamp) {
+	return getDate(timeStamp / 1000, 'year')
+}
+
 /**
  * @param {String|Number} timeStamp 时间戳
  * @returns {String} 相对时间字符串

@@ -4,45 +4,43 @@ const name = 'articles'
 const collection = db.collection('opendb-news-articles')
 
 export function getAll () {
-	console.log(66666666666666, name, collection)
 	return uniClientDB({
 		name,
 		command: collection.orderBy('sort', 'desc').get(),
 	})
 }
 
-export function aggregateGetAll (collection = 'supmenus') {
+export function addArticle (data) {
 	return uniClientDB({
-		name: 'menus',
-		command: db.collection(collection).aggregate()
-			.lookup({
-				from: 'menus',
-				localField: '_id',
-				foreignField: 'sup_id',
-				as: 'menus'
-			})
-			.project({
-				_id: 1,
-				name: 1,
-				'menus._id': 1,
-				'menus.sup_id': 1,
-				'menus.name': 1,
-			})
-			.sort({'sort': -1})
-			.end()
+		name,
+		command: collection.add(data)
 	})
 }
 
-export function aggregateMenusList (limit, collection, fromCollection) {
+export function getArticle (id) {
+	return uniClientDB({
+		name,
+		command: collection.doc(id).get()
+	})
+}
+
+export function editArticle (id, data) {
+	return uniClientDB({
+		name,
+		command: collection.doc(id).update(data)
+	})
+}
+
+export function aggregateArticlesList (limit, fromCollection = 'menus') {
 	const search = {
-		name: limit.search ? new RegExp(limit.search) : dbCmd.exists(true)
+		title: limit.search ? new RegExp(limit.search) : dbCmd.exists(true)
 	}
 	return uniClientDB({
-		name: 'menus',
-		command: db.collection(collection).aggregate()
+		name,
+		command: collection.aggregate()
 			.lookup({
 				from: fromCollection,
-				localField: 'sup_id',
+				localField: 'category_id',
 				foreignField: '_id',
 				as: fromCollection
 			})
@@ -57,7 +55,11 @@ export function aggregateMenusList (limit, collection, fromCollection) {
 				[fromCollection + '.create_time']: 0,
 			})
 			.match(search)
-			.sort({'sort': -1}),
+			.sort({
+				'is_sticky': -1,
+				'sort': -1,
+				'create_time': -1
+			}),
 		pagination: {
 		  pageSize: limit.pageSize,
 		  current: limit.page
@@ -65,61 +67,17 @@ export function aggregateMenusList (limit, collection, fromCollection) {
 	})
 }
 
-export function getMenusList (limit, collection='supmenus') {
+export function deleteArticle (id) {
 	return uniClientDB({
-		name: 'menus',
-		command: db.collection(collection)
-			.where({
-				name: new RegExp(limit.search, 'g'),
-			})
-			.orderBy('sort', 'desc'),
-		pagination: {
-		  pageSize: limit.pageSize,
-		  current: limit.page
-		}
+		name,
+		command: collection.doc(id).remove()
 	})
 }
 
-export function addMenu (data, collection='supmenus') {
-	return uniClientDB({
-		name: 'menus',
-		command: db.collection(collection).add(data)
-	})
-}
-
-export function getMenu (id, collection='supmenus') {
-	return uniClientDB({
-		name: 'menus',
-		command: db.collection(collection).doc(id)
-			.field({
-				'uid': false,
-				'create_time': false
-			})
-			.get()
-	})
-}
-
-export function editMenu (id, data, collection='supmenus') {
-	return uniClientDB({
-		name: 'menus',
-		command: db.collection(collection).doc(id).update(data)
-	})
-}
-
-export function deleteMenu (id, collection='supmenus') {
-	return uniClientDB({
-		name: 'menus',
-		command: db.collection(collection).doc(id).remove()
-	})
-}
-
-export async function batchDeleteMenu (ids, collection='supmenus') {
+export async function batchDeleteArticle (ids) {
 	const errors = []
 	for (let id of ids) {
-		const res = await	uniClientDB({
-			name: 'menus',
-			command: db.collection(collection).doc(id).remove()
-		})
+		const res = await	deleteArticle(id)
 		if (+res.affectedDocs !== 1) {
 			errors.push(res)
 			break

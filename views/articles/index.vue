@@ -1,9 +1,9 @@
 <template>
-  <Card>
+  <Card dis-hover>
     <Button
       class="top"
       type="primary"
-      @click="addedit('add')">添加栏目</Button>
+      @click="addedit('add')">发布文章</Button>
     <Button
       class="top"
       type="error"
@@ -22,7 +22,7 @@
       class="top inpt"
       search
       suffix="ios-search"
-      placeholder="栏目名称"
+      placeholder="文章标题"
       @on-search="getList"
       @on-change="getList" />
     <Table
@@ -31,6 +31,19 @@
       :data="list"
       border
       @on-selection-change="selectionChange">
+			<template
+			  slot="title"
+			  slot-scope="{ row, index }">
+			  <Tooltip
+			    content="点击查看详情"
+			    placement="right">
+			    <span
+			      style="color: #2d8cf0; cursor: pointer;"
+			      @click="toDetail(row._id)">
+						{{ row.title }}
+					</span>
+			  </Tooltip>
+			</template>
       <template
         slot="action"
         slot-scope="{ row, index }">
@@ -38,7 +51,7 @@
           content="编辑"
           placement="left">
           <Button
-            style="margin-top: 4px;margin-right: 5px;"
+            style="margin-top: 4px; margin-right: 5px;"
             type="primary"
             shape="circle"
             icon="ios-create"
@@ -64,102 +77,17 @@
         @on-page-size-change="pageSizeChange"
       />
     </div>
-    <Modal
-      v-model="show"
-      :title="showtitle"
-      @on-cancel="cancel">
-      <Form
-        ref="menu"
-        :model="menu"
-        :rules="rules"
-        :label-width="80">
-        <FormItem
-          prop="sup_id"
-          label="上级栏目">
-          <Select
-            ref="resetSelect"
-            v-model="menu.sup_id"
-            filterable
-            clearable>
-            <OptionGroup
-              v-for="sup in supmenusList"
-              :key="sup._id"
-              :label="sup.name">
-              <Option
-                v-for="item in sup.menus"
-                :value="item._id"
-                :key="item._id">{{ item.name }}</Option>
-            </OptionGroup>
-          </Select>
-        </FormItem>
-        <FormItem
-          prop="name"
-          label="栏目名称">
-          <Input
-            v-model="menu.name"
-            placeholder="请输入栏目名称"
-            clearable />
-        </FormItem>
-        <FormItem
-          prop="icon"
-          label="栏目图标">
-          <!-- 自定义上传图片组件 -->
-          <upload-image
-            v-model="menu.icon" />
-        </FormItem>
-        <FormItem
-          label="栏目说明">
-          <Input
-            v-model="menu.description"
-            :autosize="{minRows: 2, maxRows: 5}"
-            type="textarea"
-            maxlength="25"
-            show-word-limit
-            placeholder="请输入栏目说明" />
-        </FormItem>
-        <FormItem
-          label="排序">
-          <InputNumber
-            :max="20"
-            :min="0"
-            v-model="menu.sort"></InputNumber>
-        </FormItem>
-        <FormItem
-          label="状态"
-          prop="status">
-          <i-switch
-            v-model="menu.status"
-            size="large">
-            <span slot="open">启用</span>
-            <span slot="close">禁用</span>
-          </i-switch>
-        </FormItem>
-      </Form>
-      <div slot="footer"><Button
-        :loading="modal_loading"
-        type="primary"
-        size="large"
-        long
-        @click="confirm('menu')">确定</Button></div>
-    </Modal>
   </Card>
 </template>
 
 <script>
-import { aggregateGetAll, aggregateMenusList, addMenu, getMenu, editMenu, deleteMenu, batchDeleteMenu } from '@/api/menus'
-import { getAll } from '@/api/articles'
-import uploadImage from '@/components/upload/upload-image'
+import { aggregateArticlesList, deleteArticle, batchDeleteArticle } from '@/api/articles'
+import { formatDate } from '@/utils/tools'
 export default {
-  components: {
-    uploadImage
-  },
   data () {
     return {
       indeterminate: false,
       loading: false,
-      show: false,
-      showtitle: '',
-      modal_loading: false,
       ids: [],
       limit: {
         search: '',
@@ -175,104 +103,91 @@ export default {
           align: 'center'
         },
         {
-				  title: '图标',
-				  key: 'icon',
-				  align: 'center',
-				  width: '80px',
-				  render: (h, res) => {
-				    const icon = res.row.icon
-            if (icon) {
-              return h('div', {
-                style: {
-                  width: '40px',
-                  height: '40px',
-                  overflow: 'hidden',
-                  'border-radius': '4px'
-                }
-              }, [
-                h('img', {
-								  attrs: {
-								    src: icon
-								  },
-								  style: {
-								    height: '100%'
-								  }
-                })
-              ])
-            }
-				  }
+				  title: '标题',
+				  key: 'title',
+				  align: 'left',
+					slot: 'title'
+					// render: (h, res) => {
+					//   return h('span', {
+					// 			style: {
+					// 				color: '#2d8cf0',
+					// 				cursor: 'pointer'
+					// 			}
+					// 		},
+					// 		res.row.title
+					// 	)
+					// }
         },
         {
           title: '栏目名称',
-          key: 'name',
-          align: 'center'
-        },
-        {
-				  title: '上级栏目',
-				  key: 'sup_name',
-				  align: 'center'
-        },
-        {
-          title: '文章数',
-          key: 'article_count',
+          key: 'menu_name',
           align: 'center',
-          width: '100px',
-          sortable: true,
-          render: (h, res) => {
-            const count = res.row.article_count || '--'
-            return h('span', count)
-          }
+					width: '120px',
         },
         {
-				  title: '排序',
-				  key: 'sort',
-				  align: 'center',
-          width: '100px',
-          sortable: true
+				  title: '摘要',
+				  key: 'excerpt',
+				  align: 'left'
         },
-        {
+				{
 				  title: '状态',
 				  key: 'status',
 				  align: 'center',
-          width: '100px',
+				  width: '100px',
 				  render: (h, res) => {
-				    return h('span', res.row.status === 0 ? '正常' : '禁用')
+				    return h('Tag', {
+								attrs: {
+									color: res.row.status === 1 ? 'success': 'primary'
+								}
+							},
+							res.row.status === 1 ? '发布' : '草稿'
+						)
 				  }
-        },
-        {
-				  title: '栏目说明',
-				  key: 'description',
-				  align: 'left'
-        },
+				},
+				{
+				  title: '置顶',
+				  key: 'is_sticky',
+				  align: 'center',
+				  width: '100px',
+				  sortable: true,
+					render: (h, res) => {
+					  return h('Tag', {
+								attrs: {
+									color: res.row.is_sticky === 1 ? 'warning': 'default'
+								}
+							},
+							res.row.is_sticky === 1 ? '是' : '否'
+						)
+					}
+				},
+				{
+				  title: '排序',
+				  key: 'sort',
+				  align: 'center',
+				  width: '100px',
+				  sortable: true
+				},
+				{
+				  title: '发布时间',
+				  key: 'create_time',
+				  align: 'center',
+				  width: '120px',
+				  sortable: true,
+				  render: (h, res) => {
+				    const create_time = formatDate(res.row.create_time)
+				    return h('span', create_time)
+				  }
+				},
         {
           title: '操作',
           slot: 'action',
           align: 'center'
         }
       ],
-      list: [],
-      rules: {
-        name: [{ required: true, message: '请输入栏目名称', trigger: 'blur' }],
-        sup_id: [{ required: true, message: '请选择上级栏目', trigger: 'blur' }],
-        icon: [{ required: true, message: '请上传栏目图标' }],
-        status: [{ required: true, message: '请选择状态' }]
-      },
-      menu: {
-        sup_id: '',
-        name: '',
-        icon: '',
-        description: '',
-        sort: 0,
-        status: true
-      },
-      supmenusList: []
-    }
+      list: []    }
   },
   async mounted () {
-    const res = await getAll()
-    console.log('getAll', res)
     this.getList()
-    this.getSupmenusList()
   },
   methods: {
     // 全选
@@ -294,99 +209,48 @@ export default {
     // 获取列表
     async getList () {
       this.loading = true
-      const res = await aggregateMenusList(this.limit, 'submenus', 'menus')
+      const res = await aggregateArticlesList(this.limit)
       const { list, total } = res
+			console.log('aggregateArticlesList', res)
       this.limit.total = total
       this.list = list.map(item => {
-        item.sup_name = item.menus.length ? item.menus[0].name : ''
+        item.menu_name = item.menus.length ? item.menus[0].name : ''
         Reflect.deleteProperty(item, 'menus')
         return item
       })
       console.log(this.list)
       this.loading = false
     },
-    // 获取上级栏目列表
-    async getSupmenusList () {
-		  const res = await aggregateGetAll('supmenus')
-      console.log('aggregateGetAll', res)
-		  const { data } = res
-		  this.supmenusList = data
-    },
-    // 新增或编辑弹窗
+    // 新增或编辑跳转
     async addedit (action) {
-      this.show = true
+			let title
+			let id
       if (action === 'add') {
-        this.showtitle = '新增栏目'
-        this.method = 'add'
+        title = '新增文章'
       } else {
-        this.showtitle = '编辑栏目'
-        this.method = 'edit'
-        await this.getMenu(action) // action = _id
+        title = '编辑文章'
+        id = action // action = _id
       }
+			this.$router.push({
+				name: 'articles/edit',
+				params: { title },
+				query: { id }
+			})
     },
-    // 获取单个数据
-    async getMenu (id) {
-      const res = await getMenu(id, 'submenus')
-      const { data } = res
-      const [menu] = data
-      this.menu = menu
-      this.menu.status = !menu.status
-      this.menu.sort = menu.sort || 0
-    },
-    // 取消编辑&新增
-    cancel () {
-      this.method = ''
-      this.menu = {
-        sup_id: '',
-        name: '',
-        icon: '',
-        description: '',
-        sort: 0,
-        status: true
-      }
-      this.$refs.resetSelect.clearSingleSelect()
-      this.$refs.resetSelect.setQuery('')
-      this.show = false
-    },
-    // 提交
-    confirm (formName) {
-      this.$refs[formName].validate(async valid => {
-        if (valid) {
-          this.modal_loading = true
-          const menu = Object.assign({}, this.menu)
-          try {
-            menu.status = menu.status ? 0 : 1
-            if (this.method === 'add') {
-              console.log(menu)
-              await addMenu(menu, 'submenus')
-            } else if (this.method === 'edit') {
-              const id = menu._id
-              Reflect.deleteProperty(menu, '_id')
-              console.log(menu)
-              await editMenu(id, menu, 'submenus')
-            }
-            this.$Message.success({
-              background: true,
-              content: '保存成功'
-            })
-            this.modal_loading = false
-          } catch (error) {
-            this.modal_loading = false
-          }
-          this.getList()
-          this.cancel()
-        } else {
-          this.$Message.error('请输入完整信息！')
-        }
-      })
-    },
+		// 跳转详情页
+		toDetail (id) {
+			this.$router.push({
+				name: 'articles/detail',
+				query: { id }
+			})
+		},
     // 删除
     async del (id) {
 		  this.$Modal.confirm({
 		    title: '提示信息',
 		    content: '是否删除?',
 		    onOk: async () => {
-		      await deleteMenu(id, 'submenus')
+		      await deleteArticle(id)
 		      this.$Message.success('删除成功')
 		      this.getList()
 		    }
@@ -399,7 +263,7 @@ export default {
 		      title: '提示信息',
 		      content: '是否删除这些?',
 		      onOk: async () => {
-		        const errs = await batchDeleteMenu(this.ids, 'submenus')
+		        const errs = await batchDeleteArticle(this.ids)
 		        if (!errs.length) {
 		          this.$Message.success('删除成功')
 		        } else {

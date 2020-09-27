@@ -1,6 +1,6 @@
 <template>
   <div class="article-edit">
-    <h3 class="header">新建文章</h3>
+    <h3 class="header">{{ title }}</h3>
     <Form
       ref="article"
       :model="article"
@@ -13,10 +13,9 @@
 					ref="resetSelect"
 			    v-model="article.category_id"
 					placeholder="请选择栏目"
-					filterable
 			    clearable>
 					<OptionGroup
-						v-for="sup in supmenusList"
+						v-for="sup in menusList"
 						:key="sup._id"
 						:label="sup.name">
 						<Option
@@ -86,11 +85,11 @@
 			<Button
 				type="primary"
 				size="large"
-				@click="cancel()">存草稿</Button>
+				@click="confirm('article', 0)">存草稿</Button>
 			<Button
 				type="default"
 				size="large"
-				@click="cancel()">重 置</Button>
+				@click="resetForm()">重 置</Button>
 		</div>
   </div>
 </template>
@@ -100,15 +99,14 @@ import editorNex from '@/components/editor/editor-nex'
 import uploadImage from '@/components/upload/upload-image'
 import upload from '@/utils/upload'
 import { aggregateGetAll } from '@/api/menus'
+import { addArticle, getArticle, editArticle } from '@/api/articles'
 
 const defaultForm = {
-	_id: '',
 	title: '',
 	content: '',
 	avatar: '',
 	excerpt: '',
 	category_id: '',
-	user_id: '',
 	sort: 0,
 	is_sticky: false
 }
@@ -127,19 +125,44 @@ export default {
 				content: [{ required: true, message: '正文不能为空', trigger: 'blur' }],
 			},
       loading: false,
-			supmenusList: []
+			menusList: []
     }
   },
 	mounted () {
-		this.getSupmenusList()
+		this.init()
+		this.getMenusList()
+	},
+	computed: {
+		title () {
+			return this.$route.params.title || '新增文章'
+		},
+		id () {
+			return this.$route.query.id
+		}
 	},
   methods: {
-		// 获取上级栏目列表
-		async getSupmenusList () {
+		init () {
+			this.resetForm()
+			if (this.id) {
+				this.getArticle(this.id)
+			}
+		},
+		// 获取单条文章数据
+		async getArticle () {
+		  const res = await getArticle(this.id)
+		  console.log('getArticle', res)
+		  const { data } = res
+		  if (data.length) {
+				this.article = data[0]
+				this.article.is_sticky = !!this.article.is_sticky
+			}
+		},
+		// 获取栏目列表
+		async getMenusList () {
 		  const res = await aggregateGetAll('supmenus')
 		  console.log('aggregateGetAll', res)
 		  const { data } = res
-		  this.supmenusList = data
+		  this.menusList = data
 		},
     async handleUploadImage ({ range, editorNex }) {
       console.log(range, editorNex)
@@ -154,21 +177,22 @@ export default {
       // 别忘了更新光标位置
       editorNex.setSelection(range.index + 2, 'silent')
     },
-    confirm (formName) {
+    confirm (formName, type = 1) {
       this.$refs[formName].validate(async valid => {
         if (valid) {
           this.loading = true
           const article = Object.assign({}, this.article)
-					console.log('article:', article, defaultForm)
+					article.is_sticky = article.is_sticky ? 1 : 0
+					article.status = type
           try {
             if (!this.article._id) {
               console.log('article form:', article)
-              // await addMenu(article)
+              await addArticle(article)
             } else {
               const id = article._id
               Reflect.deleteProperty(article, '_id')
               console.log('article form:', article)
-              // await editMenu(id, article)
+              await editArticle(id, article)
             }
             this.$Message.success({
               background: true,
@@ -178,15 +202,25 @@ export default {
           } catch (error) {
             this.loading = false
           }
-          // this.getList()
-          // this.cancel()
+          this.$router.push({
+						name: 'articles/index'
+					})
         } else {
           this.$Message.error('请输入完整信息！')
         }
       })
     },
-		cancel () {
-			this.article = defaultForm
+		resetForm () {
+			this.article = {
+				title: '',
+				content: '',
+				avatar: '',
+				excerpt: '',
+				category_id: '',
+				sort: 0,
+				is_sticky: false
+			}
+			this.$refs.resetSelect.clearSingleSelect()
 		}
   }
 }
@@ -196,6 +230,7 @@ export default {
 	.article-edit {
 		background-color: #fff;
 		padding: 20px 40px 20px 20px;
+		border-radius: 4px;
 		.header {
 			padding: 10px 10px 8px 0;
 			border-bottom: 1px solid #dcdee2;

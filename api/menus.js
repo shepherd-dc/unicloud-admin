@@ -112,10 +112,7 @@ export function deleteMenu (id, collection='supmenus') {
 export async function batchDeleteMenu (ids, collection='supmenus') {
 	const errors = []
 	for (let id of ids) {
-		const res = await	uniClientDB({
-			name: 'menus',
-			command: db.collection(collection).doc(id).remove()
-		})
+		const res = await	deleteMenu(id, collection)
 		if (+res.affectedDocs !== 1) {
 			errors.push(res)
 			break

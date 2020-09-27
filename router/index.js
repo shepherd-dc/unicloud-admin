@@ -18,6 +18,7 @@ const router = new Router({
 	h5: {
 		vueRouterDev: true
 	},
+	encodeURI:false,  
   routes: [...routes] // 路由表
 })
 
