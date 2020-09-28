@@ -16,8 +16,8 @@ export default {
       ['link', 'image'],
       ['previous', 'next'],
 
-      [{ header: [] }, { size: [] }, { font: [] }],
-      [{ 'line-height': [] }],
+      // [{ header: [] }, { size: [] }, { font: [] }],
+      // [{ 'line-height': [] }],
 
       ['clean'] // remove formatting button
     ],

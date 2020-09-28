@@ -10,6 +10,13 @@ export function getAll () {
 	})
 }
 
+export function getArticlesCount () {
+	return uniClientDB({
+		name,
+		command: collection.count(),
+	})
+}
+
 export function addArticle (data) {
 	return uniClientDB({
 		name,
@@ -33,7 +40,8 @@ export function editArticle (id, data) {
 
 export function aggregateArticlesList (limit, fromCollection = 'menus') {
 	const search = {
-		title: limit.search ? new RegExp(limit.search) : dbCmd.exists(true)
+		title: limit.search ? new RegExp(limit.search) : dbCmd.exists(true),
+		category_id: limit.category_id || dbCmd.exists(true)
 	}
 	return uniClientDB({
 		name,

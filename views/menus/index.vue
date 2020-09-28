@@ -212,7 +212,7 @@ export default {
           width: '100px',
           sortable: true,
           render: (h, res) => {
-            const count = res.row.article_count || '--'
+            const count = res.row.article_count || 0
             return h('span', count)
           }
         },
@@ -229,7 +229,14 @@ export default {
 				  align: 'center',
           width: '100px',
 				  render: (h, res) => {
-				    return h('span', res.row.status === 0 ? '正常' : '禁用')
+				    // return h('span', res.row.status === 0 ? '正常' : '禁用')
+						return h('Tag', {
+								attrs: {
+									color: res.row.status === 0 ? 'success': 'error'
+								}
+							},
+							res.row.status === 0 ? '正常' : '禁用'
+						)
 				  }
         },
         {
@@ -286,14 +293,17 @@ export default {
     async getList () {
       this.loading = true
       const res = await aggregateMenusList(this.limit, 'menus', 'supmenus')
+			console.log('aggregateMenusList:', res)
       const { list, total } = res
       this.limit.total = total
       this.list = list.map(item => {
         item.sup_name = item.supmenus.length ? item.supmenus[0].name : ''
         Reflect.deleteProperty(item, 'supmenus')
+				item.article_count = item.articles.length
+				 Reflect.deleteProperty(item, 'articles')
         return item
       })
-      console.log(this.list)
+			console.log('this.list:', this.list)
       this.loading = false
     },
     // 获取上级栏目列表

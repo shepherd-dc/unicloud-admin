@@ -17,14 +17,31 @@
         shape="circle"
         icon="md-refresh"
         @click="getList" /></Tooltip>
-    <Input
-      v-model="limit.search"
-      class="top inpt"
-      search
-      suffix="ios-search"
-      placeholder="文章标题"
-      @on-search="getList"
-      @on-change="getList" />
+		<Input
+			v-model="limit.search"
+			class="top inpt"
+			search
+			suffix="ios-search"
+			placeholder="文章标题"
+			@on-search="getList"
+			@on-change="getList" />
+    <Select
+    	ref="resetSelect"
+			class="top inpt"
+      v-model="limit.category_id"
+			@on-change="selectFilter"
+    	placeholder="请选择栏目"
+      clearable>
+    	<OptionGroup
+    		v-for="sup in menusList"
+    		:key="sup._id"
+    		:label="sup.name">
+    		<Option
+        v-for="item in sup.menus"
+        :value="item._id"
+        :key="item._id">{{ item.name }}</Option>
+    	</OptionGroup>
+    </Select>
     <Table
       :loading="loading"
       :columns="columns"
@@ -81,6 +98,7 @@
 </template>
 
 <script>
+import { aggregateGetAll } from '@/api/menus'
 import { aggregateArticlesList, deleteArticle, batchDeleteArticle } from '@/api/articles'
 import { formatDate } from '@/utils/tools'
 export default {
@@ -91,6 +109,7 @@ export default {
       ids: [],
       limit: {
         search: '',
+				category_id: '',
         page: 1,
         total: 0,
         pageSize: 10,
@@ -184,10 +203,13 @@ export default {
           align: 'center'
         }
       ],
-      list: []    }
+      list: [],
+			menusList: []
+		}
   },
   async mounted () {
     this.getList()
+		this.getMenusList()
   },
   methods: {
     // 全选
@@ -206,6 +228,11 @@ export default {
       this.limit.pageSize = e
       this.getList()
     },
+		// 栏目筛选
+		selectFilter (e) {
+			this.limit.category_id = e
+			this.getList()
+		},
     // 获取列表
     async getList () {
       this.loading = true
@@ -221,6 +248,13 @@ export default {
       console.log(this.list)
       this.loading = false
     },
+		// 获取栏目列表
+		async getMenusList () {
+		  const res = await aggregateGetAll('supmenus')
+		  console.log('aggregateGetAll', res)
+		  const { data } = res
+		  this.menusList = data
+		},
     // 新增或编辑跳转
     async addedit (action) {
 			let title
@@ -287,7 +321,9 @@ export default {
 }
 .inpt {
 	float: right;
-	width: 300px;
+	width: 200px;
+	margin-left: 20px;
+	margin-right: 0;
 }
 .page {
 	width: 100%;

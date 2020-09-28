@@ -210,7 +210,14 @@ export default {
 				  align: 'center',
           width: '100px',
 				  render: (h, res) => {
-				    return h('span', res.row.status === 0 ? '正常' : '禁用')
+				    // return h('span', res.row.status === 0 ? '正常' : '禁用')
+						return h('Tag', {
+								attrs: {
+									color: res.row.status === 0 ? 'success': 'error'
+								}
+							},
+							res.row.status === 0 ? '正常' : '禁用'
+						)
 				  }
         },
         {

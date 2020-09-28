@@ -6,6 +6,7 @@ const dbCmd = db.command
 
 const getSubmenuRules = require('./submenus.js')
 const getSupmenuRules = require('./supmenus.js')
+const getArticlesRules = require('./articles.js')
 
 exports.main = async (event, context) => {
 	if (!event.uniIdToken) {
@@ -20,6 +21,7 @@ exports.main = async (event, context) => {
 	}
 	const submenus = getSubmenuRules(payload, dbCmd)
 	const supmenus = getSupmenuRules(payload, dbCmd)
+	const articles = getArticlesRules(payload, dbCmd)
 	try {
 		const result = await uniCurd({
 			command: event.command,
@@ -75,7 +77,8 @@ exports.main = async (event, context) => {
 					}
 				},
 				...submenus,
-				...supmenus
+				...supmenus,
+				...articles
 			}
 		})
 		return {

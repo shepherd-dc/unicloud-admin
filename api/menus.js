@@ -42,6 +42,12 @@ export function aggregateMenusList (limit, collection, fromCollection) {
 				foreignField: '_id',
 				as: fromCollection
 			})
+			.lookup({
+				from: 'opendb-news-articles',
+				localField: '_id',
+				foreignField: 'category_id',
+				as: 'articles'
+			})
 			.project({
 				uid: 0,
 				[fromCollection + '._id']: 0,
@@ -51,6 +57,12 @@ export function aggregateMenusList (limit, collection, fromCollection) {
 				[fromCollection + '.sort']: 0,
 				[fromCollection + '.description']: 0,
 				[fromCollection + '.create_time']: 0,
+				'articles.avatar': 0,
+				'articles.content': 0,
+				'articles.excerpt': 0,
+				'articles.create_time': 0,
+				'articles.is_sticky': 0,
+				'articles.sort': 0
 			})
 			.match(search)
 			.sort({'sort': -1}),
