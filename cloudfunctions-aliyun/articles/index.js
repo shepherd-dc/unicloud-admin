@@ -39,9 +39,9 @@ exports.main = async (event, context) => {
 					// 不使用聚合时mixinCondition会在没有where的时候在collection方法之后插入where，
 					// 有where时会跟where条件进行合并，取原条件且mixinCondition。
 					// 使用聚合时会在第一阶段插入match使用混入的条件，如果有blockedField会插入在blockedField对应的project之前
-					mixinCondition: {
-						uid: payload.uid
-					},
+					// mixinCondition: {
+					// 	uid: payload.uid
+					// },
 					hooks: {
 						beforeSend({
 							state,

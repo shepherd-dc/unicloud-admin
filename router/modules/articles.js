@@ -13,7 +13,7 @@ export default [
 			path: 'index',
 			name: 'articles/index',
 			meta: {
-				access: ['roles'],
+				access: ['user'],
 				title: '文章列表',
 				icon: 'ios-list-box'
 			},
@@ -22,7 +22,7 @@ export default [
 			path: 'edit',
 			name: 'articles/edit',
 			meta: {
-				access: ['roles'],
+				access: ['user'],
 				title: '发布文章',
 				icon: 'ios-create'
 			},
@@ -31,7 +31,7 @@ export default [
 			path: 'detail',
 			name: 'articles/detail',
 			meta: {
-				access: ['roles'],
+				access: ['user'],
 				title: '文章详情',
 				hideInMenu: true,
 				icon: 'ios-book'

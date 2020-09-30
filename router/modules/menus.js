@@ -13,7 +13,7 @@ export default [
 			path: 'supmenus',
 			name: 'supmenus',
 			meta: {
-				access: ['roles'],
+				access: ['user'],
 				title: '一级栏目管理',
 				icon: 'ios-folder'
 			},
@@ -22,7 +22,7 @@ export default [
 			path: 'index',
 			name: 'menus',
 			meta: {
-				access: ['roles'],
+				access: ['user'],
 				title: '二级栏目管理',
 				icon: 'ios-browsers'
 			},
@@ -31,7 +31,7 @@ export default [
 			path: 'submenus',
 			name: 'submenus',
 			meta: {
-				access: ['roles'],
+				access: ['user'],
 				title: '三级栏目管理',
 				icon: 'logo-buffer'
 			},

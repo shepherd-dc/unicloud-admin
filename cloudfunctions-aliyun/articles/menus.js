@@ -12,9 +12,9 @@ module.exports = function (payload, dbCmd) {
 			// 使用聚合时blockField不会覆盖客户端的project，而是在聚合第一阶段插入project
 			// 不使用聚合时会在最后阶段插入一个field（会覆盖客户端的field方法）
 			blockedField: ['extra'],
-			mixinCondition: {
-				uid: payload.uid
-			}
+			// mixinCondition: {
+			// 	uid: payload.uid
+			// }
 		}
 	}
 }
