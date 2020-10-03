@@ -10,7 +10,7 @@ exports.main = async (event) => {
 	let params = event.params || {}
 	let payload = {}
 	let noCheckAction = ['register', 'checkToken', 'encryptPwd', 'login', 'loginByWeixin', 'sendSmsCode',
-		'setVerifyCode', 'loginBySms', 'loginByEmail'
+		'setVerifyCode', 'loginBySms', 'loginByEmail', 'code2SessionWeixin', 'code2SessionAlipay'
 	]
 	if (noCheckAction.indexOf(event.action) === -1) {
 		if (!event.uniIdToken) {
@@ -59,8 +59,11 @@ exports.main = async (event) => {
 		case 'unbindEmail':
 			res = await uniID.unbindEmail(params);
 			break;
+		case 'code2SessionWeixin':
+			res = await uniID.code2SessionWeixin(params);
+			break;
 		case 'loginByWeixin':
-			res = await uniID.loginByWeixin(params.code);
+			res = await uniID.loginByWeixin(params);
 			break;
 		case 'bindWeixin':
 			res = await uniID.bindWeixin(params);
@@ -68,8 +71,11 @@ exports.main = async (event) => {
 		case 'unbindWeixin':
 			res = await uniID.unbindWeixin(params.uid);
 			break;
+		case 'code2SessionAlipay':
+			res = await uniID.code2SessionAlipay(params);
+			break;
 		case 'loginByAlipay':
-			res = await uniID.loginByAlipay(params.code);
+			res = await uniID.loginByAlipay(params);
 			break;
 		case 'bindAlipay':
 			res = await uniID.bindAlipay(params);
@@ -113,6 +119,12 @@ exports.main = async (event) => {
 			break;
 		case 'updateUser':
 			res = await uniID.updateUser(params);
+			break;
+		case 'setUserInviteCode':
+			res = await uniID.setUserInviteCode(params);
+			break;
+		case 'acceptInvite':
+			res = await uniID.acceptInvite(params);
 			break;
 		default:
 			res = {
