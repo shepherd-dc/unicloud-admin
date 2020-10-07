@@ -11,9 +11,11 @@
 import defaultRoutes from './routes'
 import menus from './menus'
 import articles from './articles'
+import vaccine from './vaccine'
 
 export default [
 	...menus,
 	...articles,
+	...vaccine,
 	...defaultRoutes
 ]
