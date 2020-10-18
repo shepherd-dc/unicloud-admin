@@ -378,7 +378,7 @@ export default {
 					const { type, description, tips } = vaccineInfo
 					this.vaccine.type = type
 					this.vaccine.description = description
-					this.vaccine.tips = tips
+					!this.vaccine.tips && (this.vaccine.tips = tips)
 				}
 			}
 		},
