@@ -1,7 +1,7 @@
 import { uniClientDB, db, dbCmd } from '@/utils/request'
 
-const name = 'vaccine'
-const collection = db.collection('vaccine')
+const name = 'age-vaccines'
+const collection = db.collection('age-vaccines')
 
 export function getVaccineList (limit) {
 	return uniClientDB({
@@ -59,7 +59,8 @@ export async function batchDeleteVaccine (ids) {
 export function aggregateVaccineList (limit, fromCollection = 'ages') {
 	const search = {
 		name: limit.search ? new RegExp(limit.search) : dbCmd.exists(true),
-		age_id: limit.age_id || dbCmd.exists(true)
+		age_id: limit.age_id || dbCmd.exists(true),
+		type: limit.type !== undefined ? limit.type : dbCmd.exists(true)
 	}
 	return uniClientDB({
 		name,

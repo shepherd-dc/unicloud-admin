@@ -141,7 +141,7 @@ export default {
           title: '栏目名称',
           key: 'menu_name',
           align: 'center',
-					width: '120px',
+					width: '100px',
         },
         {
 				  title: '摘要',
@@ -152,7 +152,7 @@ export default {
 				  title: '状态',
 				  key: 'status',
 				  align: 'center',
-				  width: '100px',
+				  width: '90px',
 				  render: (h, res) => {
 				    return h('Tag', {
 								attrs: {
@@ -163,22 +163,22 @@ export default {
 						)
 				  }
 				},
-				{
-				  title: '置顶',
-				  key: 'is_sticky',
-				  align: 'center',
-				  width: '100px',
-				  sortable: true,
-					render: (h, res) => {
-					  return h('Tag', {
-								attrs: {
-									color: res.row.is_sticky === 1 ? 'warning': 'default'
-								}
-							},
-							res.row.is_sticky === 1 ? '是' : '否'
-						)
-					}
-				},
+				// {
+				//   title: '置顶',
+				//   key: 'is_sticky',
+				//   align: 'center',
+				//   width: '100px',
+				//   sortable: true,
+				// 	render: (h, res) => {
+				// 	  return h('Tag', {
+				// 				attrs: {
+				// 					color: res.row.is_sticky === 1 ? 'warning': 'default'
+				// 				}
+				// 			},
+				// 			res.row.is_sticky === 1 ? '是' : '否'
+				// 		)
+				// 	}
+				// },
 				{
 				  title: '排序',
 				  key: 'sort',
@@ -200,7 +200,8 @@ export default {
         {
           title: '操作',
           slot: 'action',
-          align: 'center'
+          align: 'center',
+					width: '120px'
         }
       ],
       list: [],

@@ -3,7 +3,7 @@
 		<Card class="detail-card">
 			<div class="title">{{ detail.title }}</div>
 			<div class="info">
-				<span class="author">作者</span>
+				<span class="author">喜虫育儿</span>
 				<span class="time">{{ detail.create_time | datetime }}</span>
 			</div>
 			<div

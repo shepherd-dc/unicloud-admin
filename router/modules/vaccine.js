@@ -19,14 +19,33 @@ export default [
 			},
 			component: () => import('@/views/vaccine/ages')
 		}, {
+			path: 'vaccines',
+			name: 'vaccine/vaccines',
+			meta: {
+				access: ['user'],
+				title: '疫苗管理',
+				icon: 'ios-happy'
+			},
+			component: () => import('@/views/vaccine/vaccines')
+		}, {
 			path: 'index',
 			name: 'vaccine/index',
 			meta: {
 				access: ['user'],
-				title: '疫苗管理',
+				title: '月龄疫苗',
 				icon: 'md-done-all'
 			},
 			component: () => import('@/views/vaccine/index')
+		}, {
+			path: 'detail',
+			name: 'vaccine/detail',
+			meta: {
+				access: ['user'],
+				title: '疫苗详情',
+				hideInMenu: true,
+				icon: 'ios-book'
+			},
+			component: () => import('@/views/vaccine/detail')
 		}]
 	}
 ]

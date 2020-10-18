@@ -6,7 +6,7 @@ const collection = db.collection('opendb-news-articles')
 export function getAll () {
 	return uniClientDB({
 		name,
-		command: collection.orderBy('sort', 'desc').get(),
+		command: collection.orderBy('create_time', 'asc').orderBy('sort', 'desc').get(),
 	})
 }
 
@@ -66,7 +66,7 @@ export function aggregateArticlesList (limit, fromCollection = 'menus') {
 			.sort({
 				'is_sticky': -1,
 				'sort': -1,
-				'create_time': -1
+				'create_time': 1
 			}),
 		pagination: {
 		  pageSize: limit.pageSize,

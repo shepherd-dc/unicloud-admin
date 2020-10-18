@@ -24,7 +24,7 @@ exports.main = async (event, context) => {
 			command: event.command,
 			pagination: event.pagination,
 			rules: {
-				'vaccine': {
+				'age-vaccines': {
 					create: true,
 					read: true,
 					update: true,
