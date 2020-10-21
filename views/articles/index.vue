@@ -17,30 +17,30 @@
         shape="circle"
         icon="md-refresh"
         @click="getList" /></Tooltip>
-		<Input
-			v-model="limit.search"
-			class="top inpt"
-			search
-			suffix="ios-search"
-			placeholder="文章标题"
-			@on-search="getList"
-			@on-change="getList" />
+    <Input
+      v-model="limit.search"
+      class="top inpt"
+      search
+      suffix="ios-search"
+      placeholder="文章标题"
+      @on-search="getList"
+      @on-change="getList" />
     <Select
-    	ref="resetSelect"
-			class="top inpt"
+      ref="resetSelect"
       v-model="limit.category_id"
-			@on-change="selectFilter"
-    	placeholder="请选择栏目"
-      clearable>
-    	<OptionGroup
-    		v-for="sup in menusList"
-    		:key="sup._id"
-    		:label="sup.name">
-    		<Option
-        v-for="item in sup.menus"
-        :value="item._id"
-        :key="item._id">{{ item.name }}</Option>
-    	</OptionGroup>
+      class="top inpt"
+      placeholder="请选择栏目"
+      clearable
+      @on-change="selectFilter">
+      <OptionGroup
+        v-for="sup in menusList"
+        :key="sup._id"
+        :label="sup.name">
+        <Option
+          v-for="item in sup.menus"
+          :value="item._id"
+          :key="item._id">{{ item.name }}</Option>
+      </OptionGroup>
     </Select>
     <Table
       :loading="loading"
@@ -48,19 +48,19 @@
       :data="list"
       border
       @on-selection-change="selectionChange">
-			<template
-			  slot="title"
-			  slot-scope="{ row, index }">
-			  <Tooltip
-			    content="点击查看详情"
-			    placement="right">
-			    <span
-			      style="color: #2d8cf0; cursor: pointer;"
-			      @click="toDetail(row._id)">
-						{{ row.title }}
-					</span>
-			  </Tooltip>
-			</template>
+      <template
+        slot="title"
+        slot-scope="{ row, index }">
+        <Tooltip
+          content="点击查看详情"
+          placement="right">
+          <span
+            style="color: #2d8cf0; cursor: pointer;"
+            @click="toDetail(row._id)">
+            {{ row.title }}
+          </span>
+        </Tooltip>
+      </template>
       <template
         slot="action"
         slot-scope="{ row, index }">
@@ -109,7 +109,7 @@ export default {
       ids: [],
       limit: {
         search: '',
-				category_id: '',
+        category_id: '',
         page: 1,
         total: 0,
         pageSize: 10,
@@ -125,68 +125,68 @@ export default {
 				  title: '标题',
 				  key: 'title',
 				  align: 'left',
-					slot: 'title'
-					// render: (h, res) => {
-					//   return h('span', {
-					// 			style: {
-					// 				color: '#2d8cf0',
-					// 				cursor: 'pointer'
-					// 			}
-					// 		},
-					// 		res.row.title
-					// 	)
-					// }
+          slot: 'title'
+          // render: (h, res) => {
+          //   return h('span', {
+          // 			style: {
+          // 				color: '#2d8cf0',
+          // 				cursor: 'pointer'
+          // 			}
+          // 		},
+          // 		res.row.title
+          // 	)
+          // }
         },
         {
           title: '栏目名称',
           key: 'menu_name',
           align: 'center',
-					width: '100px',
+          width: '100px'
         },
         {
 				  title: '摘要',
 				  key: 'excerpt',
 				  align: 'left'
         },
-				{
+        {
 				  title: '状态',
 				  key: 'status',
 				  align: 'center',
 				  width: '90px',
 				  render: (h, res) => {
 				    return h('Tag', {
-								attrs: {
-									color: res.row.status === 1 ? 'success': 'primary'
-								}
-							},
-							res.row.status === 1 ? '发布' : '草稿'
-						)
+              attrs: {
+                color: res.row.status === 1 ? 'success' : 'primary'
+              }
+            },
+            res.row.status === 1 ? '发布' : '草稿'
+            )
 				  }
-				},
-				// {
-				//   title: '置顶',
-				//   key: 'is_sticky',
-				//   align: 'center',
-				//   width: '100px',
-				//   sortable: true,
-				// 	render: (h, res) => {
-				// 	  return h('Tag', {
-				// 				attrs: {
-				// 					color: res.row.is_sticky === 1 ? 'warning': 'default'
-				// 				}
-				// 			},
-				// 			res.row.is_sticky === 1 ? '是' : '否'
-				// 		)
-				// 	}
-				// },
-				{
+        },
+        // {
+        //   title: '置顶',
+        //   key: 'is_sticky',
+        //   align: 'center',
+        //   width: '100px',
+        //   sortable: true,
+        // 	render: (h, res) => {
+        // 	  return h('Tag', {
+        // 				attrs: {
+        // 					color: res.row.is_sticky === 1 ? 'warning': 'default'
+        // 				}
+        // 			},
+        // 			res.row.is_sticky === 1 ? '是' : '否'
+        // 		)
+        // 	}
+        // },
+        {
 				  title: '排序',
 				  key: 'sort',
 				  align: 'center',
 				  width: '100px',
 				  sortable: true
-				},
-				{
+        },
+        {
 				  title: '发布时间',
 				  key: 'create_time',
 				  align: 'center',
@@ -196,21 +196,21 @@ export default {
 				    const create_time = formatDate(res.row.create_time)
 				    return h('span', create_time)
 				  }
-				},
+        },
         {
           title: '操作',
           slot: 'action',
           align: 'center',
-					width: '120px'
+          width: '120px'
         }
       ],
       list: [],
-			menusList: []
-		}
+      menusList: []
+    }
   },
   async mounted () {
     this.getList()
-		this.getMenusList()
+    this.getMenusList()
   },
   methods: {
     // 全选
@@ -229,17 +229,17 @@ export default {
       this.limit.pageSize = e
       this.getList()
     },
-		// 栏目筛选
-		selectFilter (e) {
-			this.limit.category_id = e
-			this.getList()
-		},
+    // 栏目筛选
+    selectFilter (e) {
+      this.limit.category_id = e
+      this.getList()
+    },
     // 获取列表
     async getList () {
       this.loading = true
       const res = await aggregateArticlesList(this.limit)
       const { list, total } = res
-			console.log('aggregateArticlesList', res)
+      console.log('aggregateArticlesList', res)
       this.limit.total = total
       this.list = list.map(item => {
         item.menu_name = item.menus.length ? item.menus[0].name : ''
@@ -249,36 +249,36 @@ export default {
       console.log(this.list)
       this.loading = false
     },
-		// 获取栏目列表
-		async getMenusList () {
+    // 获取栏目列表
+    async getMenusList () {
 		  const res = await aggregateGetAll('supmenus')
 		  console.log('aggregateGetAll', res)
 		  const { data } = res
 		  this.menusList = data
-		},
+    },
     // 新增或编辑跳转
     async addedit (action) {
-			let title
-			let id
+      let title
+      let id
       if (action === 'add') {
         title = '新增文章'
       } else {
         title = '编辑文章'
         id = action // action = _id
       }
-			this.$router.push({
-				name: 'articles/edit',
-				params: { title },
-				query: { id }
-			})
+      this.$router.push({
+        name: 'articles/edit',
+        params: { title },
+        query: { id }
+      })
     },
-		// 跳转详情页
-		toDetail (id) {
-			this.$router.push({
-				name: 'articles/detail',
-				query: { id }
-			})
-		},
+    // 跳转详情页
+    toDetail (id) {
+      this.$router.push({
+        name: 'articles/detail',
+        query: { id }
+      })
+    },
     // 删除
     async del (id) {
 		  this.$Modal.confirm({

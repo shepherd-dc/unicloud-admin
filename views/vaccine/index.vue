@@ -24,28 +24,28 @@
       placeholder="疫苗名称"
       @on-search="getList"
       @on-change="getList" />
-		<Select
-			class="top inpt"
-		  v-model="limit.age_id"
-			@on-change="ageSelectFilter"
-			placeholder="请选择月龄/年龄"
-		  clearable>
-			<Option
-			  v-for="age in agesList"
-			  :value="age._id"
-			  :key="age._id">{{ age.month_name || age.age_name }}</Option>
-		</Select>
-		<Select
-			class="top inpt"
-		  v-model="limit.type"
-			@on-change="typeSelectFilter"
-			placeholder="请选择免费/自费"
-		  clearable>
-		  <Option
-		    v-for="item in typeList"
-		    :value="item.id"
-		    :key="item.id">{{ item.name }}</Option>
-		</Select>
+    <Select
+      v-model="limit.age_id"
+      class="top inpt"
+      placeholder="请选择月龄/年龄"
+      clearable
+      @on-change="ageSelectFilter">
+      <Option
+        v-for="age in agesList"
+        :value="age._id"
+        :key="age._id">{{ age.month_name || age.age_name }}</Option>
+    </Select>
+    <Select
+      v-model="limit.type"
+      class="top inpt"
+      placeholder="请选择免费/自费"
+      clearable
+      @on-change="typeSelectFilter">
+      <Option
+        v-for="item in typeList"
+        :value="item.id"
+        :key="item.id">{{ item.name }}</Option>
+    </Select>
     <Table
       :loading="loading"
       :columns="columns"
@@ -94,83 +94,83 @@
         :model="vaccine"
         :rules="rules"
         :label-width="80">
-				<FormItem
-				  prop="vaccine_id"
-				  label="疫苗名称">
-				  <Select
-						ref="resetSelect1"
-				    v-model="vaccine.vaccine_id"
-						@on-change="vaccineSelectChange"
-						:label-in-value="true"
-						placeholder="请选择疫苗名称"
-				    clearable
-				    filterable>
-				    <Option
-				      v-for="item in vaccinesList"
-							:label="item.name"
-				      :value="item._id"
-				      :key="item._id">
-							<Tag :color="+item.type === 1 ? 'error': 'success'">{{ +item.type === 1 ? '自费' : '免费' }}</Tag>																
-							<span>{{ item.name }}</span>
-						</Option>
-				  </Select>
-				</FormItem>
-				<FormItem
-					prop="type"
-				  label="疫苗类型">
-				  <Select
-				    v-model="vaccine.type"
-						disabled
-				    clearable>
-				    <Option
-				      v-for="item in typeList"
-				      :value="item.id"
-				      :key="item.id">{{ item.name }}</Option>
-				  </Select>
-				</FormItem>
-				<FormItem
-				  prop="age_id"
-				  label="月龄年龄">
-				  <Select
-						ref="resetSelect2"
-				    v-model="vaccine.age_id"
-						placeholder="请选择月龄/年龄"
-				    clearable
-				    filterable>
-				    <Option
-				      v-for="item in agesList"
-				      :value="item._id"
-				      :key="item._id">{{ item.month_name || item.age_name }}</Option>
-				  </Select>
-				</FormItem>
-				<FormItem
-				  prop="times"
-				  label="接种次数">
-				  <Input
-				    v-model="vaccine.times"
-				    placeholder="请输入接种次数"
-						clearable />
-				</FormItem>
-				<FormItem
-				  label="说明">
-				  <Input
-				    v-model="vaccine.description"
-				    :autosize="{minRows: 2, maxRows: 5}"
-				    type="textarea"
-				    maxlength="25"
-				    show-word-limit
-				    placeholder="请输入说明" />
-				</FormItem>
-				<FormItem
-				  label="小贴士">
-				  <Input
-				    v-model="vaccine.tips"
-				    :autosize="{minRows: 2, maxRows: 5}"
-				    type="textarea"
-				    maxlength="25"
-				    show-word-limit
-				    placeholder="请输入小贴士" />
-				</FormItem>
+        <FormItem
+          prop="vaccine_id"
+          label="疫苗名称">
+          <Select
+            ref="resetSelect1"
+            v-model="vaccine.vaccine_id"
+            :label-in-value="true"
+            placeholder="请选择疫苗名称"
+            clearable
+            filterable
+            @on-change="vaccineSelectChange">
+            <Option
+              v-for="item in vaccinesList"
+              :label="item.name"
+              :value="item._id"
+              :key="item._id">
+              <Tag :color="+item.type === 1 ? 'error': 'success'">{{ +item.type === 1 ? '自费' : '免费' }}</Tag>
+              <span>{{ item.name }}</span>
+            </Option>
+          </Select>
+        </FormItem>
+        <FormItem
+          prop="type"
+          label="疫苗类型">
+          <Select
+            v-model="vaccine.type"
+            disabled
+            clearable>
+            <Option
+              v-for="item in typeList"
+              :value="item.id"
+              :key="item.id">{{ item.name }}</Option>
+          </Select>
+        </FormItem>
+        <FormItem
+          prop="age_id"
+          label="月龄年龄">
+          <Select
+            ref="resetSelect2"
+            v-model="vaccine.age_id"
+            placeholder="请选择月龄/年龄"
+            clearable
+            filterable>
+            <Option
+              v-for="item in agesList"
+              :value="item._id"
+              :key="item._id">{{ item.month_name || item.age_name }}</Option>
+          </Select>
+        </FormItem>
+        <FormItem
+          prop="times"
+          label="接种次数">
+          <Input
+            v-model="vaccine.times"
+            placeholder="请输入接种次数"
+            clearable />
+        </FormItem>
+        <FormItem
+          label="说明">
+          <Input
+            v-model="vaccine.description"
+            :autosize="{minRows: 2, maxRows: 5}"
+            type="textarea"
+            maxlength="50"
+            show-word-limit
+            placeholder="请输入说明" />
+        </FormItem>
+        <FormItem
+          label="小贴士">
+          <Input
+            v-model="vaccine.tips"
+            :autosize="{minRows: 2, maxRows: 5}"
+            type="textarea"
+            maxlength="25"
+            show-word-limit
+            placeholder="请输入小贴士" />
+        </FormItem>
         <FormItem
           label="排序">
           <InputNumber
@@ -214,8 +214,8 @@ export default {
       ids: [],
       limit: {
         search: '',
-				age_id: '',
-				type: undefined,
+        age_id: '',
+        type: undefined,
         page: 1,
         total: 0,
         pageSize: 10,
@@ -227,35 +227,35 @@ export default {
           width: 60,
           align: 'center'
         },
-				{
+        {
 				  title: '疫苗名称',
 				  key: 'name',
 				  align: 'left',
-					render: (h, res) => {
+          render: (h, res) => {
 					  const name = res.row.name
-						const id = res.row.vaccine_id
+            const id = res.row.vaccine_id
 					  return h('span', {
-								style: {
-									color: '#2d8cf0'
-								},
-								class: {
-									links: true
-								},
-								on: {
-									click: () => {
-										this.toVaccineDetail(id)
-									}
-								}
-							}, name
-						)
-					}
-				},
-				{
+              style: {
+                color: '#2d8cf0'
+              },
+              class: {
+                links: true
+              },
+              on: {
+                click: () => {
+                  this.toVaccineDetail(id)
+                }
+              }
+            }, name
+            )
+          }
+        },
+        {
 				  title: '接种次数',
 				  key: 'times',
 				  align: 'center',
-					width: '100px'
-				},
+          width: '100px'
+        },
         {
           title: '月龄/年龄',
           key: 'month_age',
@@ -263,33 +263,33 @@ export default {
           width: '120px',
           sortable: true
         },
-				{
+        {
 				  title: '类型',
 				  key: 'type',
 				  align: 'center',
-					width: '90px',
+          width: '90px',
 				  render: (h, res) => {
-						return h('Tag', {
-								attrs: {
-									color: res.row.type === 0 ? 'success': 'error'
-								}
-							},
-							res.row.type === 0 ? '免费' : '自费'
-						)
+            return h('Tag', {
+              attrs: {
+                color: res.row.type === 0 ? 'success' : 'error'
+              }
+            },
+            res.row.type === 0 ? '免费' : '自费'
+            )
 				  }
-				},
-				{
+        },
+        {
 				  title: '说明',
 				  key: 'description',
 				  align: 'left',
-					width: '120px'
-				},
-				{
+          width: '120px'
+        },
+        {
 				  title: '小贴士',
 				  key: 'tips',
 				  align: 'left',
-					width: '100px'
-				},
+          width: '100px'
+        },
         {
 				  title: '排序',
 				  key: 'sort',
@@ -297,66 +297,66 @@ export default {
           width: '90px',
           sortable: true
         },
-     //    {
+        //    {
 				 //  title: '状态',
 				 //  key: 'status',
 				 //  align: 'center',
-					// width: '90px',
+        // width: '90px',
 				 //  render: (h, res) => {
-					// 	return h('Tag', {
-					// 			attrs: {
-					// 				color: res.row.status === 0 ? 'success': 'error'
-					// 			}
-					// 		},
-					// 		res.row.status === 0 ? '正常' : '禁用'
-					// 	)
+        // 	return h('Tag', {
+        // 			attrs: {
+        // 				color: res.row.status === 0 ? 'success': 'error'
+        // 			}
+        // 		},
+        // 		res.row.status === 0 ? '正常' : '禁用'
+        // 	)
 				 //  }
-     //    },
+        //    },
         {
           title: '操作',
           slot: 'action',
           align: 'center',
-					width: '120px',
+          width: '120px'
         }
       ],
       list: [],
       rules: {
         vaccine_id: [{ required: true, message: '请选择疫苗名称', trigger: 'blur' }],
-        age_id: [{ required: true, message: '请选择月龄/年龄', trigger: 'blur'  }],
-				times: [{ required: true, message: '请输入接种次数', trigger: 'blur' }],
-				type: [{ required: true, message: '请选择疫苗' }],
-				age: [{ required: true, message: '请输入年龄数', trigger: 'blur' }],
+        age_id: [{ required: true, message: '请选择月龄/年龄', trigger: 'blur' }],
+        times: [{ required: true, message: '请输入接种次数', trigger: 'blur' }],
+        type: [{ required: true, message: '请选择疫苗' }],
+        age: [{ required: true, message: '请输入年龄数', trigger: 'blur' }],
         status: [{ required: true, message: '请选择状态' }]
       },
       vaccine: {
-				vaccine_id: '',
+        vaccine_id: '',
         name: '',
         age_id: '',
         type: 0,
         times: '',
         description: '',
         tips: '',
-				sort: 0,
+        sort: 0,
         status: true
       },
-			agesList: [],
-			vaccinesList: [],
-			typeList: [
-				{
-					id: 0,
-					name: '免费'
-				},
-				{
-					id: 1,
-					name: '自费'
-				}
-			]
+      agesList: [],
+      vaccinesList: [],
+      typeList: [
+        {
+          id: 0,
+          name: '免费'
+        },
+        {
+          id: 1,
+          name: '自费'
+        }
+      ]
     }
   },
   mounted () {
     this.getList()
-		this.getVaccinesList()
-		this.getAgesList()
+    this.getVaccinesList()
+    this.getAgesList()
   },
   methods: {
     // 全选
@@ -365,23 +365,23 @@ export default {
         return item['_id']
       })
     },
-		async vaccineSelectChange (v) {
-			console.log('vvvvv', v)
-			if (v) {
-				const { value, label } = v
-				this.vaccine.vaccine_id = value
-				this.vaccine.name = label
-				const res = await getVaccine(value)
-				const { data } = res
-				if (data.length) {
-					const vaccineInfo = data[0]
-					const { type, description, tips } = vaccineInfo
-					this.vaccine.type = type
-					this.vaccine.description = description
-					!this.vaccine.tips && (this.vaccine.tips = tips)
-				}
-			}
-		},
+    async vaccineSelectChange (v) {
+      console.log('vvvvv', v)
+      if (v) {
+        const { value, label } = v
+        this.vaccine.vaccine_id = value
+        this.vaccine.name = label
+        const res = await getVaccine(value)
+        const { data } = res
+        if (data.length) {
+          const vaccineInfo = data[0]
+          const { type, description, tips } = vaccineInfo
+          this.vaccine.type = type
+          !this.vaccine.description && (this.vaccine.description = description)
+          !this.vaccine.tips && (this.vaccine.tips = tips)
+        }
+      }
+    },
     // 删除
     async del (id) {
       this.$Modal.confirm({
@@ -424,45 +424,45 @@ export default {
       this.limit.pageSize = e
       this.getList()
     },
-		// 免费/自费筛选
-		typeSelectFilter (v) {
-			this.limit.type = v
-			this.getList()
-		},
-		// 月龄筛选
-		ageSelectFilter (v) {
-			this.limit.age_id = v
-			this.getList()
-		},
+    // 免费/自费筛选
+    typeSelectFilter (v) {
+      this.limit.type = v
+      this.getList()
+    },
+    // 月龄筛选
+    ageSelectFilter (v) {
+      this.limit.age_id = v
+      this.getList()
+    },
     // 获取列表
     async getList () {
       this.loading = true
       const res = await aggregateVaccineList(this.limit)
-			console.log('aggregateVaccineList', res)
+      console.log('aggregateVaccineList', res)
       const { list, total } = res
       this.limit.total = total
-			this.list = list.map(item => {
+      this.list = list.map(item => {
 			  item.month_age = item.ages.length ? (item.ages[0].month_name || item.ages[0].age_name) : ''
 			  Reflect.deleteProperty(item, 'ages')
 			  return item
-			})
-			console.log('this.list:', this.list)
+      })
+      console.log('this.list:', this.list)
       this.loading = false
     },
-		// 获取疫苗列表
-		async getVaccinesList () {
-			const res = await getVaccinesAll()
-			console.log('getVaccinesAll', res)
-			const { data } = res
-			this.vaccinesList = data
-		},
-		// 获取月龄列表
-		async getAgesList () {
+    // 获取疫苗列表
+    async getVaccinesList () {
+      const res = await getVaccinesAll()
+      console.log('getVaccinesAll', res)
+      const { data } = res
+      this.vaccinesList = data
+    },
+    // 获取月龄列表
+    async getAgesList () {
 		  const res = await getAgesAll()
 		  console.log('getAgesAll', res)
 		  const { data } = res
 		  this.agesList = data
-		},
+    },
     // 新增或编辑弹窗
     async addedit (action) {
       this.show = true
@@ -478,18 +478,18 @@ export default {
     // 获取单个数据
     async getVaccine (id) {
       const res = await getVaccine(id)
-			console.log(res)
+      console.log(res)
       const { data } = res
-			const vaccine = data[0]
-			vaccine.status = !vaccine.status
-			vaccine.sort = vaccine.sort || 0
-			this.vaccine = vaccine
+      const vaccine = data[0]
+      vaccine.status = !vaccine.status
+      vaccine.sort = vaccine.sort || 0
+      this.vaccine = vaccine
     },
     // 取消编辑&新增
     cancel () {
       this.method = ''
       this.vaccine = {
-				vaccine_id: '',
+        vaccine_id: '',
         name: '',
         age_id: '',
         type: 0,
@@ -499,10 +499,10 @@ export default {
         sort: 0,
         status: true
       }
-			this.$refs.resetSelect1.clearSingleSelect()
-			this.$refs.resetSelect1.setQuery('')
-			this.$refs.resetSelect2.clearSingleSelect()
-			this.$refs.resetSelect2.setQuery('')
+      this.$refs.resetSelect1.clearSingleSelect()
+      this.$refs.resetSelect1.setQuery('')
+      this.$refs.resetSelect2.clearSingleSelect()
+      this.$refs.resetSelect2.setQuery('')
       this.show = false
     },
     // 提交
@@ -537,13 +537,13 @@ export default {
         }
       })
     },
-		toVaccineDetail (id) {
-			console.log('vaccine clicked', id)
-			this.$router.push({
-				name: 'vaccine/detail',
-				query: { id }
-			})
-		}
+    toVaccineDetail (id) {
+      console.log('vaccine clicked', id)
+      this.$router.push({
+        name: 'vaccine/detail',
+        query: { id }
+      })
+    }
   }
 }
 </script>

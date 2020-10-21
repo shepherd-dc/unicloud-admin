@@ -77,4 +77,14 @@ export default {
 		border-radius: 0 0 4px 4px;
 		height: 100%;
 	}
+	/deep/.ql-toolbar.ql-snow {
+		padding: 0 0 0 8px!important;
+		border-radius: 4px 4px 0 0;
+	}
+	/deep/.ql-container.ql-snow {
+		border-radius: 0 0 4px 4px;
+	}
+	/deep/.ql-snow .ql-picker-label {
+		line-height: 22px;
+	}
 </style>
