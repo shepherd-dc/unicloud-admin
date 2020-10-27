@@ -1287,48 +1287,48 @@
 .ql-snow .ql-picker.ql-size .ql-picker-item::before {
   content: '\5B57\53F7';
 }
-.ql-snow .ql-picker.ql-size .ql-picker-label[data-value='9']::before,
-.ql-snow .ql-picker.ql-size .ql-picker-item[data-value='9']::before {
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value='9px']::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value='9px']::before {
   content: '9';
 }
-.ql-snow .ql-picker.ql-size .ql-picker-label[data-value='10']::before,
-.ql-snow .ql-picker.ql-size .ql-picker-item[data-value='10']::before {
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value='10px']::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value='10px']::before {
   content: '10';
 }
-.ql-snow .ql-picker.ql-size .ql-picker-label[data-value='11']::before,
-.ql-snow .ql-picker.ql-size .ql-picker-item[data-value='11']::before {
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value='11px']::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value='11px']::before {
   content: '11';
 }
-.ql-snow .ql-picker.ql-size .ql-picker-label[data-value='12']::before,
-.ql-snow .ql-picker.ql-size .ql-picker-item[data-value='12']::before {
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value='12px']::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value='12px']::before {
   content: '12';
 }
-.ql-snow .ql-picker.ql-size .ql-picker-label[data-value='14']::before,
-.ql-snow .ql-picker.ql-size .ql-picker-item[data-value='14']::before {
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value='14px']::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value='14px']::before {
   content: '14';
 }
-.ql-snow .ql-picker.ql-size .ql-picker-label[data-value='16']::before,
-.ql-snow .ql-picker.ql-size .ql-picker-item[data-value='16']::before {
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value='16px']::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value='16px']::before {
   content: '16';
 }
-.ql-snow .ql-picker.ql-size .ql-picker-label[data-value='18']::before,
-.ql-snow .ql-picker.ql-size .ql-picker-item[data-value='18']::before {
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value='18px']::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value='18px']::before {
   content: '18';
 }
-.ql-snow .ql-picker.ql-size .ql-picker-label[data-value='22']::before,
-.ql-snow .ql-picker.ql-size .ql-picker-item[data-value='22']::before {
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value='22px']::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value='22px']::before {
   content: '22';
 }
-.ql-snow .ql-picker.ql-size .ql-picker-label[data-value='24']::before,
-.ql-snow .ql-picker.ql-size .ql-picker-item[data-value='24']::before {
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value='24px']::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value='24px']::before {
   content: '24';
 }
-.ql-snow .ql-picker.ql-size .ql-picker-label[data-value='30']::before,
-.ql-snow .ql-picker.ql-size .ql-picker-item[data-value='30']::before {
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value='30px']::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value='30px']::before {
   content: '30';
 }
-.ql-snow .ql-picker.ql-size .ql-picker-label[data-value='36']::before,
-.ql-snow .ql-picker.ql-size .ql-picker-item[data-value='36']::before {
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value='36px']::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value='36px']::before {
   content: '36';
 }
 .ql-snow .ql-picker.ql-size .ql-picker-item[data-value='9']::before {
@@ -1371,24 +1371,24 @@
 .ql-snow .ql-picker.ql-line-height .ql-picker-item::before {
   content: '\884C\95F4\8DDD';
 }
-.ql-snow .ql-picker.ql-line-height .ql-picker-label[data-value='115']::before,
-.ql-snow .ql-picker.ql-line-height .ql-picker-item[data-value='115']::before {
+.ql-snow .ql-picker.ql-line-height .ql-picker-label[data-value='2']::before,
+.ql-snow .ql-picker.ql-line-height .ql-picker-item[data-value='2']::before {
   content: '1.15';
 }
-.ql-snow .ql-picker.ql-line-height .ql-picker-label[data-value='150']::before,
-.ql-snow .ql-picker.ql-line-height .ql-picker-item[data-value='150']::before {
+.ql-snow .ql-picker.ql-line-height .ql-picker-label[data-value='2.5']::before,
+.ql-snow .ql-picker.ql-line-height .ql-picker-item[data-value='2.5']::before {
   content: '1.5';
 }
-.ql-snow .ql-picker.ql-line-height .ql-picker-label[data-value='200']::before,
-.ql-snow .ql-picker.ql-line-height .ql-picker-item[data-value='200']::before {
+.ql-snow .ql-picker.ql-line-height .ql-picker-label[data-value='3.4']::before,
+.ql-snow .ql-picker.ql-line-height .ql-picker-item[data-value='3.4']::before {
   content: '2.0';
 }
-.ql-snow .ql-picker.ql-line-height .ql-picker-label[data-value='250']::before,
-.ql-snow .ql-picker.ql-line-height .ql-picker-item[data-value='250']::before {
+.ql-snow .ql-picker.ql-line-height .ql-picker-label[data-value='4.3']::before,
+.ql-snow .ql-picker.ql-line-height .ql-picker-item[data-value='4.3']::before {
   content: '2.5';
 }
-.ql-snow .ql-picker.ql-line-height .ql-picker-label[data-value='300']::before,
-.ql-snow .ql-picker.ql-line-height .ql-picker-item[data-value='300']::before {
+.ql-snow .ql-picker.ql-line-height .ql-picker-label[data-value='5.1']::before,
+.ql-snow .ql-picker.ql-line-height .ql-picker-item[data-value='5.1']::before {
   content: '3.0';
 }
 .ql-snow .ql-color-picker.ql-background .ql-picker-item {

@@ -6667,9 +6667,11 @@ var FONTS = [false, 'simsun', 'simhei', 'microsoftyahei', 'fangsong', 'kaiti', '
 var HEADERS = [false, '1', '2', '3', '4', '5', '6'];
 
 // const SIZES = [ 'small', false, 'large', 'huge' ];
-var SIZES = [false, '9', '10', '11', '12', '14', '16', '18', '22', '24', '30', '36'];
+// const SIZES = [false, '9', '10', '11', '12', '14', '16', '18', '22', '24', '30', '36',];
+var SIZES = [false, '9px', '10px', '11px', '12px', '14px', '16px', '18px', '22px', '24px', '30px', '36px'];
 
-var LINEHEIGHTS = ['100', '115', '150', '200', '250', '300'];
+// const LINEHEIGHTS = ['100', '115', '150', '200', '250', '300'];
+var LINEHEIGHTS = ['1', '2', '2.5', '3.4', '4.3', '5.1'];
 
 var BaseTheme = function (_Theme) {
   _inherits(BaseTheme, _Theme);
@@ -7138,17 +7140,17 @@ _core2.default.register({
   /* 使用class样式，需添加对应的 CSS */
   // 'formats/background': BackgroundClass,
   // 'formats/color': ColorClass,
-  'formats/font': _font.FontClass,
-  'formats/size': _size.SizeClass,
+  // 'formats/font': FontClass,
+  // 'formats/size': SizeClass,
 
   /* 也可使用内联style样式，官方推荐使用class样式 */
-  // 'formats/font': FontStyle,
-  // 'formats/size': SizeStyle,
-  /* 自定义行高class */
-  'formats/line-height': _lineHeight.LineHeightClass,
+  'formats/font': _font.FontStyle,
+  'formats/size': _size.SizeStyle,
+  // /* 自定义行高class */
+  // 'formats/line-height': LineHeightClass,
 
   /* 自定义行高style */
-  // 'formats/line-height': LineHeightStyle,
+  'formats/line-height': _lineHeight.LineHeightStyle,
 
   'formats/blockquote': _blockquote2.default,
   'formats/code-block': _code2.default,
