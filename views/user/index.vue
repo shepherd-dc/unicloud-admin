@@ -1,143 +1,94 @@
 <template>
   <Card>
-    <Layout>
-      <Sider
-        style="background-color: #f3f3f3;"
-        hide-trigger>
-        <view class="title">角色</view>
-        <view class="Sider">
+    <Button
+      class="top"
+      type="primary"
+      @click="addedit('add')">添加部门</Button>
+    <Button
+      class="top"
+      type="error"
+      @click="batchDe">批量删除</Button>
+    <Tooltip
+      content="刷新"
+      placement="right"><Button
+        class="top"
+        type="primary"
+        shape="circle"
+        icon="md-refresh"
+        @click="getList" /></Tooltip>
+    <Input
+      v-model="limit.search"
+      class="top inpt"
+      search
+      suffix="ios-search"
+      placeholder="部门名称"
+      @on-search="getList"
+      @on-change="getList" />
+    <Table
+      :loading="loading"
+      :columns="columns"
+      :data="list"
+      border
+      @on-selection-change="selectionChange">
+      <template
+        slot="action"
+        slot-scope="{ row, index }">
+        <Tooltip
+          content="编辑"
+          placement="left">
           <Button
-            :type="limit.rolesid === '' ? 'primary' : 'default'"
-            class="access"
-            @click="changeroles()">全部</Button>
-          <Button
-            v-for="(item, index) in roles"
-            :type="limit.rolesid === item._id ? 'primary' : 'default'"
-            :key="index"
-            class="access"
-            @click="changeroles(item._id)">
-            {{ item.name }}
-          </Button>
-        </view>
-      </Sider>
-      <Layout class="bodys">
-        <view>
-          <Button
-            class="top"
+            style="margin-top: 4px;margin-right: 5px;"
             type="primary"
-            @click="addedit('add')">新增用户</Button>
-          <Button
-            class="top"
-            type="error"
-            @click="batchDe">批量删除</Button>
-          <Tooltip
-            content="刷新"
-            placement="right"><Button
-              class="top"
-              type="primary"
-              shape="circle"
-              icon="md-refresh"
-              @click="getList" /></Tooltip>
-          <Input
-            v-model="limit.username"
-            class="top inpt"
-            search
-            suffix="ios-search"
-            placeholder="用户名"
-            @on-search="getList"
-            @on-change="getList" />
-        </view>
-        <Table
-          :loading="loading"
-          :columns="columns"
-          :data="list"
-          border
-          @on-selection-change="selectionChange">
-          <template
-            slot-scope="{ row, index }"
-            slot="action">
-            <Tooltip
-              content="编辑"
-              placement="left">
-              <Button
-                style="margin-top: 4px;margin-right: 5px;"
-                type="primary"
-                shape="circle"
-                icon="ios-create"
-                @click="addedit(row._id)" />
-            </Tooltip>
-            <Button
-              style="margin-top: 4px;"
-              type="error"
-              shape="circle"
-              icon="ios-trash"
-              @click="deleted(row._id)" />
-          </template>
-        </Table>
-        <div class="page">
-          <Page
-            :total="limit.total"
-            :page-size-opts="limit.pageSizeOpts"
-            :current="limit.page"
-            :page-size="limit.pageSize"
-            show-total
-            show-sizer
-            @on-change="pageChange"
-            @on-page-size-change="pageSizeChange"
-          />
-        </div>
-      </Layout>
-    </Layout>
+            shape="circle"
+            icon="ios-create"
+            @click="addedit(row._id)" />
+        </Tooltip>
+        <Button
+          style="margin-top: 4px;"
+          type="error"
+          shape="circle"
+          icon="ios-trash"
+          @click="deleted(row._id)" />
+      </template>
+    </Table>
+    <div class="page">
+      <Page
+        :total="limit.total"
+        :page-size-opts="limit.pageSizeOpts"
+        :current="limit.page"
+        :page-size="limit.pageSize"
+        show-total
+        show-sizer
+        @on-change="pageChange"
+        @on-page-size-change="pageSizeChange"
+      />
+    </div>
     <Modal
       v-model="show"
       :title="showtitle"
       @on-cancel="cancel">
       <Form
-        ref="adminuser"
-        :model="adminuser"
+        ref="department"
+        :model="department"
         :rules="rules"
         :label-width="80">
         <FormItem
-          prop="username"
-          label="账号"><Input
-            v-model="adminuser.username"
-            placeholder="请输入账号"
+          prop="name"
+          label="部门名称"><Input
+            v-model="department.name"
+            placeholder="请输入部门名称"
             clearable /></FormItem>
         <FormItem
-          prop="password"
-          label="密码"><Input
-            v-model="adminuser.password"
-            type="password"
-            placeholder="请输入密码"
-            clearable /></FormItem>
-        <FormItem
-          v-if="method === 'add'"
-          prop="passwdCheck"
-          label="确认密码">
-          <Input
-            v-model="adminuser.passwdCheck"
-            type="password"
-            placeholder="请输入确认密码"
-            clearable />
-        </FormItem>
-        <FormItem
-          prop="roles_id"
-          label="部门">
-          <Select
-            v-model="adminuser.roles_id"
-            clearable
-            filterable>
-            <Option
-              v-for="item in roles"
-              v-model="item._id"
-              :key="item._id">{{ item.name }}</Option>
-          </Select>
-        </FormItem>
+          prop="node"
+          label="部门权限"><Tree
+            :data="authTree"
+            show-checkbox
+            @on-check-change="checkChange" /></FormItem>
         <FormItem
           label="状态"
           prop="status">
           <i-switch
-            v-model="adminuser.status"
+            v-model="department.status"
             size="large">
             <span slot="open">启用</span>
             <span slot="close">禁用</span>
@@ -149,28 +100,31 @@
         type="primary"
         size="large"
         long
-        @click="confirm('adminuser')">确定</Button></div>
+        @click="confirm('department')">确定</Button></div>
     </Modal>
   </Card>
 </template>
 
 <script>
-import { getAdminUserList, deleteAdminUser, batchdelete, getAdminUser, addAdminUser, editAdminUser } from '@/api/user'
-import { getRolesList } from '@/api/roles'
-import { validateUse, validatePass } from '@/utils/checker'
-// import { cloneDeep } from 'lodash'
+import { getRoles, getRolesList, deleteRoles, batchdelete, addRoles, editRoles } from '@/api/roles'
+import routes from '@/router/modules/routes'
+import { getSubRouter } from '@/utils'
 export default {
   data () {
-    const validatePassCheck = (rule, value, callback) => {
-      if (!value) {
-        callback(new Error('请再次输入密码'))
-      } else if (value !== this.adminuser.password) {
-        callback(new Error('两次密码不一致'))
-      } else {
-        callback()
-      }
-    }
     return {
+      indeterminate: false,
+      loading: false,
+      show: false,
+      showtitle: '',
+      modal_loading: false,
+      ids: [],
+      limit: {
+        search: '',
+        page: 1,
+        total: 0,
+        pageSize: 10,
+        pageSizeOpts: [10, 50, 100, 500, 1000]
+      },
       columns: [
         {
           type: 'selection',
@@ -178,23 +132,22 @@ export default {
           align: 'center'
         },
         {
-          title: '用户名',
-          key: 'username',
-          sortable: true,
+          title: '部门',
+          key: 'name',
           align: 'center'
         },
         {
-          title: '部门',
+          title: '人数',
+          key: 'popnum',
           align: 'center',
           sortable: true,
           render: (h, res) => {
-            return h('span', res.row.roles[0].name)
+            return h('span', res.row.user.length)
           }
         },
         {
           title: '状态',
           key: 'status',
-          sortable: true,
           align: 'center',
           render: (h, res) => {
             return h('span', res.row.status === 0 ? '正常' : '禁用')
@@ -206,34 +159,17 @@ export default {
           align: 'center'
         }
       ],
-      loading: false,
-      ids: [],
       list: [],
-      roles: [],
-      limit: {
-        username: '',
-        rolesid: '',
-        page: 1,
-        total: 0,
-        pageSize: 10,
-        pageSizeOpts: [10, 50, 100, 500, 1000]
-      },
       rules: {
-        username: [{ required: true, validator: validateUse, trigger: 'blur' }],
-        password: [{ required: true, validator: validatePass, trigger: 'blur' }],
-        passwdCheck: [{ required: true, validator: validatePassCheck, trigger: 'blur' }],
-        roles_id: [{ required: true, message: '请选择部门' }],
+        name: [{ required: true, message: '请输入部门名称', trigger: 'blur' }],
+        node: [{ required: true, type: 'array', min: 1, message: '请选择部门权限', trigger: 'change' }],
         status: [{ required: true, message: '请选择状态' }]
       },
-      show: false,
-      showtitle: '',
-      modal_loading: false,
-      method: '',
-      adminuser: {
-        username: '',
-        password: '',
-        passwdCheck: '',
-        roles_id: '',
+      nodes: [],
+      authTree: [],
+      department: {
+        name: '',
+        node: [],
         status: true
       }
     }
@@ -242,6 +178,16 @@ export default {
     this.getList()
   },
   methods: {
+    // 权限选择
+    checkChange (e) {
+      var access = []
+      e.forEach(res => {
+        if (res.access) {
+          access.push(res.access[0])
+        }
+      })
+      this.department.node = access
+    },
     // 全选
     selectionChange (e) {
       this.ids = e.map(function (item) {
@@ -250,43 +196,34 @@ export default {
     },
     // 删除
     async deleted (id) {
-      // 不能删除当前账号
-      if (this.$store.state.user.uid !== id) {
+      this.$Modal.confirm({
+        title: '提示信息',
+        content: '是否删除?',
+        onOk: async () => {
+          try {
+            await deleteRoles({ id })
+            this.$Message.success('删除成功')
+          } catch (error) {}
+          this.getList()
+        }
+      })
+    },
+    // 批量删除
+    async batchDe () {
+      if (this.ids.length > 0) {
         this.$Modal.confirm({
           title: '提示信息',
-          content: '是否删除该账号?',
+          content: '是否删除这些?',
           onOk: async () => {
             try {
-              await deleteAdminUser({ id })
+              await batchdelete({ ids: this.ids })
               this.$Message.success('删除成功')
             } catch (error) {}
             this.getList()
           }
         })
       } else {
-        this.$Message.error('请勿删除当前账号')
-      }
-    },
-    // 批量删除
-    async batchDe () {
-      if (this.ids.findIndex(item => item === this.$store.state.user.uid) === -1) {
-        if (this.ids.length > 0) {
-          this.$Modal.confirm({
-            title: '提示信息',
-            content: '是否删除这些?',
-            onOk: async () => {
-              try {
-                await batchdelete({ ids: this.ids })
-                this.$Message.success('删除成功')
-              } catch (error) {}
-              this.getList()
-            }
-          })
-        } else {
-          this.$Message.error('请选择要删除的数据')
-        }
-      } else {
-        this.$Message.error('请勿删除当前账号')
+        this.$Message.error('请选择要删除的数据')
       }
     },
     // 切换页码
@@ -299,40 +236,14 @@ export default {
       this.limit.pageSize = e
       this.getList()
     },
-    // 部门
-    changeroles (id) {
-      this.limit.rolesid = id || ''
-      this.getList()
-    },
     // 获取列表
     async getList () {
       this.loading = true
       try {
-        const res = await getAdminUserList(this.limit)
-        const roles = (await getRolesList({})).data
-        this.roles = roles
+        const res = await getRolesList(this.limit)
         this.limit.total = res.total
         this.list = res.data
         this.loading = false
-      } catch (error) {}
-    },
-    // 取消编辑&新增
-    cancel () {
-      this.method = ''
-      this.adminuser = {
-        username: '',
-        password: '',
-        roles_id: '',
-        status: true
-      }
-      this.show = false
-    },
-    // 获取单个数据
-    async getAdminUsers (id) {
-      try {
-        const res = await getAdminUser({ id })
-        this.adminuser = res
-        this.adminuser.status = !res.status
       } catch (error) {
         console.error(error)
       }
@@ -341,41 +252,58 @@ export default {
     addedit (action) {
       this.show = true
       if (action === 'add') {
-        this.showtitle = '新增成员'
+        this.showtitle = '新增部门'
         this.method = 'add'
+        this.authTree = getSubRouter(routes, [], this.$store.state.user.access)
       } else {
-        this.showtitle = '编辑成员'
+        this.showtitle = '编辑部门'
         this.method = 'edit'
-        this.getAdminUsers(action)
+        this.getDepartment(action)
       }
+    },
+    // 获取单个数据
+    async getDepartment (id) {
+      try {
+        const res = await getRoles({ id })
+        this.department = res
+        this.authTree = getSubRouter(routes, this.department.node, this.$store.state.user.access)
+        this.department.status = !res.status
+      } catch (error) {}
+    },
+    // 取消编辑&新增
+    cancel () {
+      this.method = ''
+      this.department = {
+        name: '',
+        node: [],
+        status: true
+      }
+      this.show = false
     },
     // 提交
     confirm (formName) {
       this.$refs[formName].validate(async valid => {
         if (valid) {
-          // console.log(this.adminuser)
-          if (this.adminuser._id !== '5f45d5fe8752410001896b90') {
+          if (this.department.name !== '超级权限') {
             this.modal_loading = true
-            // const adminuser = cloneDeep(this.adminuser)
-            const adminuser = Object.assign({}, this.adminuser)
+            const department = Object.assign({}, this.department)
             try {
-              adminuser.status = adminuser.status ? 0 : 1
-              delete adminuser.passwdCheck
+              department.status = department.status ? 0 : 1
               if (this.method === 'add') {
-                await addAdminUser(adminuser)
+                await addRoles(department)
               } else if (this.method === 'edit') {
-                await editAdminUser(adminuser)
+                await editRoles(department)
               }
               this.$Message.success({
                 background: true,
                 content: '保存成功'
               })
               this.modal_loading = false
-              this.getList()
-              this.cancel()
             } catch (error) {
-              console.error(error)
+              this.modal_loading = false
             }
+            this.getList()
+            this.cancel()
           } else {
             this.$Message.error('禁止操作')
           }
@@ -391,26 +319,6 @@ export default {
 <style>
 .top {
 	margin: 0 20px 20px 0;
-}
-.bodys {
-	padding: 20px;
-	background: #ffffff;
-}
-.title {
-	background: #007aff;
-	height: 50px;
-	text-align: center;
-	color: #ffffff;
-	font-weight: bold;
-	font-size: 21px;
-	line-height: 50px;
-}
-.Sider {
-	padding: 20px;
-	text-align: center;
-}
-.access {
-	margin: 10px;
 }
 .inpt {
 	float: right;

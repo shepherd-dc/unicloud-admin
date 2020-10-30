@@ -10,15 +10,6 @@ export default [
 			icon: 'md-outlet'
 		},
 		children: [{
-			path: 'ages',
-			name: 'ages',
-			meta: {
-				access: ['user'],
-				title: '月龄管理',
-				icon: 'ios-happy'
-			},
-			component: () => import('@/views/vaccine/ages')
-		}, {
 			path: 'vaccines',
 			name: 'vaccine/vaccines',
 			meta: {

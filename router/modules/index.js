@@ -11,11 +11,13 @@
 import defaultRoutes from './routes'
 import menus from './menus'
 import articles from './articles'
+import ages from './ages'
 import vaccine from './vaccine'
 
 export default [
 	...menus,
 	...articles,
+	...ages,
 	...vaccine,
 	...defaultRoutes
 ]

@@ -65,6 +65,15 @@ export default [
 			},
 			component: () => import('@/views/user/index')
 		}, {
+			path: 'admin',
+			name: 'admin',
+			meta: {
+				access: ['roles'],
+				title: '管理员管理',
+				icon: 'md-people'
+			},
+			component: () => import('@/views/user/admin')
+		}, {
 			path: 'roles',
 			name: 'roles',
 			meta: {

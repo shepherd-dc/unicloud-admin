@@ -94,6 +94,14 @@
             placeholder="请输入栏目名称"
             clearable />
         </FormItem>
+				<FormItem
+				  prop="en_name"
+				  label="英文名称">
+				  <Input
+				    v-model="menu.en_name"
+				    placeholder="请输入英文名称"
+				    clearable />
+				</FormItem>
         <FormItem
           prop="icon"
           label="栏目图标">
@@ -200,6 +208,12 @@ export default {
           key: 'name',
           align: 'center'
         },
+				{
+				  title: '英文名称',
+				  key: 'en_name',
+				  align: 'left',
+					width: '140px'
+				},
         {
 				  title: '上级栏目',
 				  key: 'sup_name',
@@ -253,6 +267,7 @@ export default {
       list: [],
       rules: {
         name: [{ required: true, message: '请输入栏目名称', trigger: 'blur' }],
+        en_name: [{ required: true, message: '请输入英文名称', trigger: 'blur' }],
         sup_id: [{ required: true, message: '请选择上级栏目', trigger: 'blur' }],
         icon: [{ required: true, message: '请上传栏目图标' }],
         status: [{ required: true, message: '请选择状态' }]
@@ -260,6 +275,7 @@ export default {
       menu: {
         sup_id: '',
         name: '',
+				en_name: '',
         icon: '',
         description: '',
         sort: 0,
@@ -340,6 +356,7 @@ export default {
       this.menu = {
 				sup_id: '',
         name: '',
+				en_name: '',
         icon: '',
         description: '',
         sort: 0,
