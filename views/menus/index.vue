@@ -76,7 +76,7 @@
           prop="sup_id"
           label="上级栏目">
           <Select
-						ref="resetSelect"
+            ref="resetSelect"
             v-model="menu.sup_id"
             clearable
             filterable>
@@ -94,20 +94,20 @@
             placeholder="请输入栏目名称"
             clearable />
         </FormItem>
-				<FormItem
-				  prop="en_name"
-				  label="英文名称">
-				  <Input
-				    v-model="menu.en_name"
-				    placeholder="请输入英文名称"
-				    clearable />
-				</FormItem>
+        <FormItem
+          prop="en_name"
+          label="英文名称">
+          <Input
+            v-model="menu.en_name"
+            placeholder="请输入英文名称"
+            clearable />
+        </FormItem>
         <FormItem
           prop="icon"
           label="栏目图标">
-        	<!-- 自定义上传图片组件 -->
-        	<upload-image
-        		v-model="menu.icon" />
+          <!-- 自定义上传图片组件 -->
+          <upload-image
+            v-model="menu.icon" />
         </FormItem>
         <FormItem
           label="栏目说明">
@@ -151,9 +151,9 @@
 import { getAll, aggregateMenusList, addMenu, getMenu, editMenu, deleteMenu, batchDeleteMenu } from '@/api/menus'
 import uploadImage from '@/components/upload/upload-image'
 export default {
-	components:{
-		uploadImage
-	},
+  components: {
+    uploadImage
+  },
   data () {
     return {
       indeterminate: false,
@@ -208,12 +208,12 @@ export default {
           key: 'name',
           align: 'center'
         },
-				{
+        {
 				  title: '英文名称',
 				  key: 'en_name',
 				  align: 'left',
-					width: '140px'
-				},
+          width: '140px'
+        },
         {
 				  title: '上级栏目',
 				  key: 'sup_name',
@@ -244,13 +244,13 @@ export default {
           width: '100px',
 				  render: (h, res) => {
 				    // return h('span', res.row.status === 0 ? '正常' : '禁用')
-						return h('Tag', {
-								attrs: {
-									color: res.row.status === 0 ? 'success': 'error'
-								}
-							},
-							res.row.status === 0 ? '正常' : '禁用'
-						)
+            return h('Tag', {
+              attrs: {
+                color: res.row.status === 0 ? 'success' : 'error'
+              }
+            },
+            res.row.status === 0 ? '正常' : '禁用'
+            )
 				  }
         },
         {
@@ -275,14 +275,14 @@ export default {
       menu: {
         sup_id: '',
         name: '',
-				en_name: '',
+        en_name: '',
         icon: '',
         description: '',
         sort: 0,
         status: true
       },
-      supmenusList: [],
-		}
+      supmenusList: []
+    }
   },
   mounted () {
     this.getList()
@@ -309,17 +309,17 @@ export default {
     async getList () {
       this.loading = true
       const res = await aggregateMenusList(this.limit, 'menus', 'supmenus')
-			console.log('aggregateMenusList:', res)
+      console.log('aggregateMenusList:', res)
       const { list, total } = res
       this.limit.total = total
       this.list = list.map(item => {
         item.sup_name = item.supmenus.length ? item.supmenus[0].name : ''
         Reflect.deleteProperty(item, 'supmenus')
-				item.article_count = item.articles.length
+        item.article_count = item.articles.length
 				 Reflect.deleteProperty(item, 'articles')
         return item
       })
-			console.log('this.list:', this.list)
+      console.log('this.list:', this.list)
       this.loading = false
     },
     // 获取上级栏目列表
@@ -354,17 +354,17 @@ export default {
     cancel () {
       this.method = ''
       this.menu = {
-				sup_id: '',
+        sup_id: '',
         name: '',
-				en_name: '',
+        en_name: '',
         icon: '',
         description: '',
         sort: 0,
         status: true
       }
-			// 重置Select组件选择状态及搜索条件
-			this.$refs.resetSelect.clearSingleSelect()
-			this.$refs.resetSelect.setQuery('')
+      // 重置Select组件选择状态及搜索条件
+      this.$refs.resetSelect.clearSingleSelect()
+      this.$refs.resetSelect.setQuery('')
       this.show = false
     },
     // 提交
@@ -424,7 +424,7 @@ export default {
 		        } else {
 		          this.$Message.error('出错啦')
 		        }
-						this.limit.page = 1
+            this.limit.page = 1
 		        this.getList()
 		      }
 		    })

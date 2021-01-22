@@ -3,11 +3,11 @@
     <Button
       class="top"
       type="primary"
-      @click="addedit('add')">添加部门</Button>
+      @click="addedit('add')">添加用户</Button>
     <Button
       class="top"
       type="error"
-      @click="batchDe">批量删除</Button>
+      @click="batchDel">批量删除</Button>
     <Tooltip
       content="刷新"
       placement="right"><Button
@@ -21,7 +21,7 @@
       class="top inpt"
       search
       suffix="ios-search"
-      placeholder="部门名称"
+      placeholder="用户名"
       @on-search="getList"
       @on-change="getList" />
     <Table
@@ -68,27 +68,52 @@
       :title="showtitle"
       @on-cancel="cancel">
       <Form
-        ref="department"
-        :model="department"
+        ref="user"
+        :model="user"
         :rules="rules"
         :label-width="80">
         <FormItem
-          prop="name"
-          label="部门名称"><Input
-            v-model="department.name"
-            placeholder="请输入部门名称"
+          prop="username"
+          label="账号"><Input
+            v-model="user.username"
+            placeholder="请输入账号"
             clearable /></FormItem>
+				<FormItem
+					prop="password"
+					label="密码"><Input
+						v-model="user.password"
+						type="password"
+						placeholder="请输入密码"
+						clearable /></FormItem>
+				<FormItem
+					v-if="method === 'add'"
+					prop="passwdCheck"
+					label="确认密码">
+					<Input
+						v-model="user.passwdCheck"
+						type="password"
+						placeholder="请输入确认密码"
+						clearable />
+				</FormItem>
         <FormItem
-          prop="node"
-          label="部门权限"><Tree
-            :data="authTree"
-            show-checkbox
-            @on-check-change="checkChange" /></FormItem>
+					v-if="method === 'add' || user.roles_id"
+          prop="roles_id"
+          label="部门">
+          <Select
+            v-model="user.roles_id"
+            clearable
+            filterable>
+            <Option
+              v-for="item in roles"
+              v-model="item._id"
+              :key="item._id">{{ item.name }}</Option>
+          </Select>
+        </FormItem>
         <FormItem
           label="状态"
           prop="status">
           <i-switch
-            v-model="department.status"
+            v-model="user.status"
             size="large">
             <span slot="open">启用</span>
             <span slot="close">禁用</span>
@@ -100,17 +125,27 @@
         type="primary"
         size="large"
         long
-        @click="confirm('department')">确定</Button></div>
+        @click="confirm('user')">确定</Button></div>
     </Modal>
   </Card>
 </template>
 
 <script>
-import { getRoles, getRolesList, deleteRoles, batchdelete, addRoles, editRoles } from '@/api/roles'
-import routes from '@/router/modules/routes'
-import { getSubRouter } from '@/utils'
+import { getRolesList } from '@/api/roles'
+import { aggregateUsersList, addUser, getUser, editUser, deleteUser, batchDeleteUser } from '@/api/users'
+import { formatDate } from '@/utils/tools'
+import { validateUse, validatePass } from '@/utils/checker'
 export default {
   data () {
+		const validatePassCheck = (rule, value, callback) => {
+		  if (!value) {
+		    callback(new Error('请再次输入密码'))
+		  } else if (value !== this.user.password) {
+		    callback(new Error('两次密码不一致'))
+		  } else {
+		    callback()
+		  }
+		}
     return {
       indeterminate: false,
       loading: false,
@@ -132,27 +167,56 @@ export default {
           align: 'center'
         },
         {
-          title: '部门',
-          key: 'name',
-          align: 'center'
+          title: 'wx_openid',
+					width: 180,
+					render: (h, res) => {
+					  return h('span', res.row.wx_openid['mp-weixin'])
+					}
         },
         {
-          title: '人数',
-          key: 'popnum',
+          title: '角色',
           align: 'center',
-          sortable: true,
           render: (h, res) => {
-            return h('span', res.row.user.length)
+            return h('span', res.row.roles.length ? res.row.roles[0].name : '普通用户')
           }
         },
         {
-          title: '状态',
-          key: 'status',
+          title: '权限',
           align: 'center',
           render: (h, res) => {
-            return h('span', res.row.status === 0 ? '正常' : '禁用')
+            return h('span', res.row.roles.length ? res.row.roles[0].node.join(', ') : '--')
           }
         },
+				{
+				  title: '注册时间',
+				  align: 'center',
+				  render: (h, res) => {
+				    const register_date = res.row.register_date ? formatDate(res.row.register_date) : '--'
+				    return h('span', register_date)
+				  }
+				},
+				{
+				  title: '注册IP',
+				  align: 'center',
+					render: (h, res) => {
+					  return h('span', res.row.register_ip ? res.row.register_ip : '--')
+					}
+				},
+				{
+				  title: '上次登录时间',
+				  align: 'center',
+				  render: (h, res) => {
+				    const last_login_date = res.row.last_login_date ? formatDate(res.row.last_login_date) : '--'
+				    return h('span', last_login_date)
+				  }
+				},
+				{
+				  title: '上次登录IP',
+				  align: 'center',
+					render: (h, res) => {
+					  return h('span', res.row.last_login_ip ? res.row.last_login_ip : '--')
+					}
+				},
         {
           title: '操作',
           slot: 'action',
@@ -160,18 +224,22 @@ export default {
         }
       ],
       list: [],
+			roles:[],
+			method: undefined,
       rules: {
-        name: [{ required: true, message: '请输入部门名称', trigger: 'blur' }],
-        node: [{ required: true, type: 'array', min: 1, message: '请选择部门权限', trigger: 'change' }],
+        username: [{ required: true, validator: validateUse, trigger: 'blur' }],
+        password: [{ required: true, validator: validatePass, trigger: 'blur' }],
+        passwdCheck: [{ required: true, validator: validatePassCheck, trigger: 'blur' }],
+        roles_id: [{ required: true, message: '请选择部门' }],
         status: [{ required: true, message: '请选择状态' }]
       },
-      nodes: [],
-      authTree: [],
-      department: {
-        name: '',
-        node: [],
-        status: true
-      }
+			user: {
+			  username: '',
+			  roles_id: '',
+				password: '',
+				passwdCheck: '',
+			  status: true
+			}
     }
   },
   mounted () {
@@ -201,7 +269,7 @@ export default {
         content: '是否删除?',
         onOk: async () => {
           try {
-            await deleteRoles({ id })
+            await deleteUser(id)
             this.$Message.success('删除成功')
           } catch (error) {}
           this.getList()
@@ -209,14 +277,14 @@ export default {
       })
     },
     // 批量删除
-    async batchDe () {
+    async batchDel () {
       if (this.ids.length > 0) {
         this.$Modal.confirm({
           title: '提示信息',
           content: '是否删除这些?',
           onOk: async () => {
             try {
-              await batchdelete({ ids: this.ids })
+              await batchDeleteUser(this.ids)
               this.$Message.success('删除成功')
             } catch (error) {}
             this.getList()
@@ -240,42 +308,50 @@ export default {
     async getList () {
       this.loading = true
       try {
-        const res = await getRolesList(this.limit)
-        this.limit.total = res.total
-        this.list = res.data
+        const res = await aggregateUsersList(this.limit)
+				console.log('aggregateUsersList', res)
+				const roles = (await getRolesList({})).data
+				this.roles = roles
+				const { list, total } = res
+        this.limit.total = total
+        this.list = list.filter(item => !item.roles_id)
         this.loading = false
       } catch (error) {
         console.error(error)
       }
     },
+		// 获取单个数据
+		async getUser (id) {
+		  try {
+		    const { data } = await getUser(id)
+				if (data.length) {
+					const res = data[0]
+					this.user = res
+					this.user.status = !res.status
+				} 
+		  } catch (error) {
+		    console.error(error)
+		  }
+		},
     // 新增或编辑弹窗
     addedit (action) {
       this.show = true
       if (action === 'add') {
-        this.showtitle = '新增部门'
+        this.showtitle = '新增用户'
         this.method = 'add'
-        this.authTree = getSubRouter(routes, [], this.$store.state.user.access)
       } else {
-        this.showtitle = '编辑部门'
+        this.showtitle = '编辑用户'
         this.method = 'edit'
-        this.getDepartment(action)
+        this.getUser(action)
       }
-    },
-    // 获取单个数据
-    async getDepartment (id) {
-      try {
-        const res = await getRoles({ id })
-        this.department = res
-        this.authTree = getSubRouter(routes, this.department.node, this.$store.state.user.access)
-        this.department.status = !res.status
-      } catch (error) {}
     },
     // 取消编辑&新增
     cancel () {
       this.method = ''
-      this.department = {
-        name: '',
-        node: [],
+      this.user = {
+        username: '',
+        password: '',
+        roles_id: '',
         status: true
       }
       this.show = false
@@ -284,26 +360,35 @@ export default {
     confirm (formName) {
       this.$refs[formName].validate(async valid => {
         if (valid) {
-          if (this.department.name !== '超级权限') {
+          // console.log(this.user)
+          if (this.user._id !== '5f45d5fe8752410001896b90') {
             this.modal_loading = true
-            const department = Object.assign({}, this.department)
+            // const user = cloneDeep(this.user)
+            const user = Object.assign({}, this.user)
             try {
-              department.status = department.status ? 0 : 1
+              user.status = user.status ? 0 : 1
+              delete user.passwdCheck
               if (this.method === 'add') {
-                await addRoles(department)
+                await addUser(user)
               } else if (this.method === 'edit') {
-                await editRoles(department)
+								const id = user._id
+								const { username, roles_id, status } = user 
+								const data = {
+									username, roles_id, status
+								}
+								console.log('editUser', id, data)
+                await editUser(id, data)
               }
               this.$Message.success({
                 background: true,
                 content: '保存成功'
               })
               this.modal_loading = false
+              this.getList()
+              this.cancel()
             } catch (error) {
-              this.modal_loading = false
+              console.error(error)
             }
-            this.getList()
-            this.cancel()
           } else {
             this.$Message.error('禁止操作')
           }

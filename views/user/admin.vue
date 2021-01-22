@@ -29,7 +29,7 @@
           <Button
             class="top"
             type="error"
-            @click="batchDe">批量删除</Button>
+            @click="batchDel">批量删除</Button>
           <Tooltip
             content="刷新"
             placement="right"><Button
@@ -155,7 +155,7 @@
 </template>
 
 <script>
-import { getAdminUserList, deleteAdminUser, batchdelete, getAdminUser, addAdminUser, editAdminUser } from '@/api/user'
+import { getAdminUserList, deleteAdminUser, batchdelete, getAdminUser, addAdminUser, editAdminUser } from '@/api/admin'
 import { getRolesList } from '@/api/roles'
 import { validateUse, validatePass } from '@/utils/checker'
 // import { cloneDeep } from 'lodash'
@@ -268,7 +268,7 @@ export default {
       }
     },
     // 批量删除
-    async batchDe () {
+    async batchDel () {
       if (this.ids.findIndex(item => item === this.$store.state.user.uid) === -1) {
         if (this.ids.length > 0) {
           this.$Modal.confirm({
